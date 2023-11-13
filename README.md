@@ -21,3 +21,7 @@ See https://motionsimulation.atlassian.net/wiki/spaces/SD/overview for all notes
 - https://realpython.com/python-json/
 - https://www.geeksforgeeks.org/reading-and-writing-json-to-a-file-in-python/
 - https://www.w3schools.com/python/python_json.asp
+
+# To Do
+- connect individual files to one another
+- structure folders/repo/modules
