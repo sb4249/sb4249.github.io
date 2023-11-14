@@ -8,13 +8,19 @@
 #define SERVER_PORT 4001
 #define SERVER_IP "192.168.1.64"
 
-int listening = 1;
+int listening = 1; //used in termination signal handler
 
 struct Packet {
     int32_t tick;
     int32_t tmp;
     double x_lin_vel;
     double y_lin_vel;
+    double z_lin_vel;
+    double pitch_ang_vel;
+    double roll_ang_vel;
+    double pitch_pos;
+    double roll_pos;
+    double altitude;
 };
 
 uint32_t
@@ -124,7 +130,17 @@ main()
             continue;
         }
 
-        printf("%d %d %0.2f %0.2f\n", flip_32_bit_int(packet.tick), flip_32_bit_int(packet.tmp), flip_double(packet.x_lin_vel), flip_double(packet.y_lin_vel));
+        printf("%d %d %0.2f %0.2f %0.2f %0.2f %0.2f %0.2f %0.2f %0.2f\n",
+                flip_32_bit_int(packet.tick),
+                flip_32_bit_int(packet.tmp),
+                flip_double(packet.x_lin_vel),
+                flip_double(packet.y_lin_vel),
+                flip_double(packet.z_lin_vel),
+                flip_double(packet.pitch_ang_vel),
+                flip_double(packet.roll_ang_vel),
+                flip_double(packet.pitch_pos),
+                flip_double(packet.roll_pos),
+                flip_double(packet.altitude));
     }
 
     close(server_socket);
