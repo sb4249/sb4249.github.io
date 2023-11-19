@@ -1,10 +1,18 @@
 # client_server
 To run: 
-Edit the IP and port accordingly in wrapper.py and server.c
+Edit the IP and port accordingly in wrapper.py and server.c.
 
-Compile and run server.c in one terminal
+Compile and run server.c in one terminal:
+
+```
+make build
+make run
+```
+
 Run wrapper.py in another terminal
-
+```
+python3 wrapper.py
+```
 
 # Logging 
 Logging system for telemtry senior project 2023-2024
