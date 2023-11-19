@@ -5,7 +5,7 @@ from packet import Packet
 from client import Client
 
 if __name__ == "__main__":
-    server_ip = '192.168.1.64'
+    server_ip = '127.0.0.1'
     server_port = 4001
     rate = 30 # transmission rate in hz
 

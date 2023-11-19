@@ -6,7 +6,7 @@
 #include <signal.h>
 
 #define SERVER_PORT 4001
-#define SERVER_IP "192.168.1.64"
+#define SERVER_IP "127.0.0.1"
 
 int listening = 1;
 
