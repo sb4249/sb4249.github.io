@@ -74,8 +74,10 @@ handle_signal(int signo)
 {
     if (signo == SIGINT)
     {
-        printf("exiting\n");
+        printf("\nexiting\n");
         listening = 0;
+        // TODO: close socket? Maybe making the socket a global?
+        exit(1);
     }
 }
 
