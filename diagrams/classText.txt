@@ -1,0 +1,51 @@
+@startuml
+skinparam classAttributeIconSize 0 
+
+circle SciPy
+circle NL2Telemetry
+class Wrapper {
+    + client: Client
+    + nl2fetch: NL2Fetch
+    + main(): int
+}
+
+class Client {
+    - ip: str
+    - localPort: int
+    - destinationPort: int
+    + Client(ip: str, localPort: int, destinationPort: int): Client
+    + __del__(): void
+    + sendData(byteArray: bytearray): void
+}
+
+class Packet {
+    +xLinVel: double
+    +yLinVel: double
+    +zLinVel: double
+    +pitchAngVel: double
+    +rollAngVel: double
+    +pitchPos: double
+    +rollPos: double
+    +altitude: double
+    +Packet(): Packet
+    +ConvertNL2(data: double[]): bytearray
+    -FormatPacket(): bytearray
+}
+class NL2Fetch {
+    -ip: str
+    -port: int
+    +NL2Fetch(ip: str, port: int): NL2Fetch
+    +NL2GetTelemetry(data: double[]): bool
+}
+
+class Logger {
+    + log(data: double[]): void
+}
+
+Wrapper --[dashed]right--> Logger
+Wrapper *-- Client
+Wrapper --> NL2Fetch
+Wrapper --[dashed]--> Packet
+Packet --[dashed]--> SciPy
+NL2Fetch --[dashed]--> NL2Telemetry
+@enduml

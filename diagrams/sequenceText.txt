@@ -1,0 +1,50 @@
+@startuml
+title "No Limits 2 to Motion Simulator Platform"
+
+
+actor       "         Operator        " as Operator
+entity      "      Show Computer      " as ShowComp
+participant "      Wrapper Class      " as WrapperClass
+participant "       Client Class      " as ClientClass
+participant "      NL2Fetch Class     " as NL2FetchClass
+participant "   NL2 External Library  " as NL2Lib
+entity      "       No Limits 2       " as NL2
+participant "       Packet Class      " as PacketClass
+participant "         Socket          " as Socket
+entity      "     Motion Computer     " as MotionComp
+entity      "Motion Simulator Platform" as MotionPlatform
+
+Operator -> ShowComp : <<Presses start button>>
+ShowComp -> ShowComp: <<Starts running game>>
+ShowComp -> WrapperClass: <<Starts running main function>>
+WrapperClass -> ClientClass: Initialize
+activate ClientClass
+WrapperClass -> NL2FetchClass: Initialize
+activate NL2FetchClass
+WrapperClass -> PacketClass: Initialize packet
+activate PacketClass
+WrapperClass <-- PacketClass: <<initialized with default values>>
+
+
+loop 30 Hz loop
+    WrapperClass -> NL2FetchClass: NL2_get_telemetry(packet)
+    NL2FetchClass -> NL2Lib: getTelemetry()
+    NL2Lib -> NL2: <<external get telemetry>> 
+    NL2 --> NL2Lib: <<NL2 data packet>>
+    NL2Lib --> NL2FetchClass: <<NL2 data packet>>
+    NL2FetchClass --> WrapperClass: <<udated Packet values>>
+    
+    WrapperClass -> PacketClass: ConvertNL2()
+    PacketClass -> PacketClass: formatPacket()
+    WrapperClass <-- PacketClass: <<formatted and converted Packet to data>>
+    
+    WrapperClass -> ClientClass: sendData(data)
+    ClientClass -> Socket: send(data)
+    Socket -> MotionComp: <<sends data>>
+    MotionComp -> MotionPlatform: <<sends data>>
+    MotionPlatform -> ShowComp: <<sends state data>>
+end
+deactivate NL2FetchClass
+deactivate PacketClass
+deactivate ClientClass
+@enduml
