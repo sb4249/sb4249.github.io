@@ -1,12 +1,12 @@
 # client_server
-To run: 
+To run:
 Edit the IP and port accordingly in wrapper.py and server.c
 
 Compile and run server.c in one terminal
 Run wrapper.py in another terminal
 
 
-# Logging 
+# Logging
 Logging system for telemtry senior project 2023-2024
 See https://motionsimulation.atlassian.net/wiki/spaces/SD/overview for all notes on this project
 
@@ -23,5 +23,8 @@ See https://motionsimulation.atlassian.net/wiki/spaces/SD/overview for all notes
 - https://www.w3schools.com/python/python_json.asp
 
 # To Do
-- connect individual files to one another
 - structure folders/repo/modules
+- integrate logging
+- finalize packet structure to reflect all filler/real size
+- actually fetch real NL2 data to use
+
