@@ -11,6 +11,8 @@
 int listening = 1; //used in termination signal handler
 
 struct Packet {
+    double header; //wrong variable type but we dont need to read here
+    double fsTimer; //wrong variable type but we dont need to read here
     int32_t tick;
     int32_t tmp;
     double x_lin_vel;
@@ -21,6 +23,7 @@ struct Packet {
     double pitch_pos;
     double roll_pos;
     double altitude;
+    double garbage; //wrong variable type but we dont need to read here
 };
 
 uint32_t
