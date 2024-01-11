@@ -20,7 +20,8 @@ class NL2Fetch:
         data = Answer.get_data(self.nl2.receive())
 
         if not isinstance(data, TelemetryData):
-             # TODO: Handle error
+             # TODO: Use logger to handle errors
+             print("Error getting telemetry data")
              return
         
         # if this is the first frame being received,
