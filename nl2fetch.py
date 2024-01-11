@@ -3,7 +3,7 @@ import math_utils
 from nl2telemetry import NoLimits2
 from nl2telemetry.message import get_telemetry, Answer
 from nl2telemetry.message.reply import TelemetryData
-from globals import *
+from globals import FRAME_RATE
 
 class NL2Fetch:
 
@@ -23,9 +23,11 @@ class NL2Fetch:
              # TODO: Handle error
              return
         
-        if self.last_pos is None:
-            self.last_pos = (data.x_pos, data.y_pos, data.z_pos)
-        
+        # if this is the first frame being received,
+        # set the last position to the current position
+        # for purposes of calculating velocity
+        self.last_pos = self.last_pos or (data.position_x, data.position_y, data.position_z)
+
         velocity = math_utils.calculate_velocity(
             self.last_pos,
             (data.position_x, data.position_y, data.position_z),
