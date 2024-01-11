@@ -12,7 +12,7 @@ class NL2Fetch:
         print("starting nl2 connection")
         self.nl2 = NoLimits2(ip, port)
         self.nl2.connect()
-        self.lastPos = None
+        self.last_pos = None
 
 
     def NL2_get_telemetry(self, packet: Packet):
@@ -23,11 +23,11 @@ class NL2Fetch:
              # TODO: Handle error
              return
         
-        if self.lastPos is None:
-            self.lastPos = (data.x_pos, data.y_pos, data.z_pos)
+        if self.last_pos is None:
+            self.last_pos = (data.x_pos, data.y_pos, data.z_pos)
         
         velocity = math_utils.calculate_velocity(
-            self.lastPos,
+            self.last_pos,
             (data.position_x, data.position_y, data.position_z),
             1.0/float(FRAME_RATE)
         )
@@ -41,7 +41,7 @@ class NL2Fetch:
         packet.pitch_pos = pitch
         packet.roll_pos = roll
 
-        self.lastPos = (data.position_x, data.position_y, data.position_z)
+        self.last_pos = (data.position_x, data.position_y, data.position_z)
 
     def __del__(self):
         # Terminate NL2 connection here
