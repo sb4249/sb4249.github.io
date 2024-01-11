@@ -15,7 +15,7 @@ class NL2Fetch:
         self.last_pos = None
 
 
-    def NL2_get_telemetry(self, packet: Packet):
+    def nl2_get_telemetry(self, packet: Packet):
         self.nl2.send(get_telemetry)
         data = Answer.get_data(self.nl2.receive())
 

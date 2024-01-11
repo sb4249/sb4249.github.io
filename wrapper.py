@@ -24,7 +24,7 @@ if __name__ == "__main__":
     packet = Packet()
     while True:
 
-        nl2.NL2_get_telemetry(packet)
+        nl2.nl2_get_telemetry(packet)
         client.send_data(packet.format_packet())
         packet.time_tick()
 
