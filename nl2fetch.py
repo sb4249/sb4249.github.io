@@ -1,5 +1,5 @@
 from packet import Packet
-from mathTest import *
+import math_utils
 from nl2telemetry import NoLimits2
 from nl2telemetry.message import get_telemetry, Answer
 from nl2telemetry.message.reply import TelemetryData
@@ -23,18 +23,18 @@ class NL2Fetch:
         
         if self.lastPos is None:
             self.lastPos = (data.x_pos, data.y_pos, data.z_pos)
-        else:
-            self.lastPos = (packet.x_pos, packet.y_pos, packet.z_pos)
         
-        velocity = calculate_velocity(self.lastPos, (data.position_x, data.position_y, data.position_z))
+        velocity = math_utils.calculate_velocity(self.lastPos, (data.position_x, data.position_y, data.position_z))
         packet.x_lin_vel = velocity[0]
         packet.y_lin_vel = velocity[1]
         packet.z_lin_vel = velocity[2]
 
         x, y, z, w = data.rotation_quaternion_x, data.rotation_quaternion_y, data.rotation_quaternion_z, data.rotation_quaternion_w
-        pitch, roll = quaternion_to_pitch_and_roll(x, y, z, w)
+        pitch, roll = math_utils.quaternion_to_pitch_and_roll(x, y, z, w)
         packet.pitch_pos = pitch
         packet.roll_pos = roll
+
+        self.lastPos = (data.position_x, data.position_y, data.position_z)
 
     def __del__(self):
         # Terminate NL2 connection here
