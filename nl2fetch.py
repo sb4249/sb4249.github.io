@@ -1,26 +1,42 @@
 from packet import Packet
 from mathTest import *
+from nl2telemetry import NoLimits2
+from nl2telemetry.message import get_telemetry, Answer
+from nl2telemetry.message.reply import TelemetryData
 
 class NL2Fetch:
 
     def __init__(self, ip, port):
         # Initialize NL2 connection here
         print("starting nl2 connection")
+        self.nl2 = NoLimits2(ip, port)
+        self.lastPos = None
 
-    def __del__(self):
-        # Terminate NL2 connection here
-        print("closing nl2 connection")
 
-    def NL2_get_telemetry(self, packet):
-        # Fetch NL2 telemetry here to be used instead of the numbers
+    def NL2_get_telemetry(self, packet: Packet):
+        self.nl2.send(get_telemetry())
+        data = Answer.get_data(self.nl2.receive())
 
-        velocity = calculate_velocity((10,5,-3),(10.6,5.4,-4))
+        if not isinstance(data, TelemetryData):
+             # TODO: Handle error
+             return
+        
+        if self.lastPos is None:
+            self.lastPos = (data.x_pos, data.y_pos, data.z_pos)
+        else:
+            self.lastPos = (packet.x_pos, packet.y_pos, packet.z_pos)
+        
+        velocity = calculate_velocity(self.lastPos, (data.position_x, data.position_y, data.position_z))
         packet.x_lin_vel = velocity[0]
         packet.y_lin_vel = velocity[1]
         packet.z_lin_vel = velocity[2]
 
-        x, y, z, w = 0.0075961, 0.0868241, 0.0868241, 0.9924039
+        x, y, z, w = data.rotation_quaternion_x, data.rotation_quaternion_y, data.rotation_quaternion_z, data.rotation_quaternion_w
         pitch, roll = quaternion_to_pitch_and_roll(x, y, z, w)
         packet.pitch_pos = pitch
         packet.roll_pos = roll
 
+    def __del__(self):
+        # Terminate NL2 connection here
+        print("closing nl2 connection")
+        self.nl2.close()
