@@ -3,6 +3,7 @@ import math_utils
 from nl2telemetry import NoLimits2
 from nl2telemetry.message import get_telemetry, Answer
 from nl2telemetry.message.reply import TelemetryData
+from globals import *
 
 class NL2Fetch:
 
@@ -10,6 +11,7 @@ class NL2Fetch:
         # Initialize NL2 connection here
         print("starting nl2 connection")
         self.nl2 = NoLimits2(ip, port)
+        self.nl2.connect()
         self.lastPos = None
 
 
@@ -24,7 +26,12 @@ class NL2Fetch:
         if self.lastPos is None:
             self.lastPos = (data.x_pos, data.y_pos, data.z_pos)
         
-        velocity = math_utils.calculate_velocity(self.lastPos, (data.position_x, data.position_y, data.position_z))
+        velocity = math_utils.calculate_velocity(
+            self.lastPos,
+            (data.position_x, data.position_y, data.position_z),
+            1.0/float(FRAME_RATE)
+        )
+
         packet.x_lin_vel = velocity[0]
         packet.y_lin_vel = velocity[1]
         packet.z_lin_vel = velocity[2]
