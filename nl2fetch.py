@@ -23,28 +23,32 @@ class NL2Fetch:
              # TODO: Use logger to handle errors
              print("Error getting telemetry data")
              return
-        
-        # if this is the first frame being received,
-        # set the last position to the current position
-        # for purposes of calculating velocity
-        self.last_pos = self.last_pos or (data.position_x, data.position_y, data.position_z)
 
-        velocity = math_utils.calculate_velocity(
-            self.last_pos,
-            (data.position_x, data.position_y, data.position_z),
-            1.0/float(FRAME_RATE)
-        )
+        if data.in_play_mode:
+            # if this is the first frame being received,
+            # set the last position to the current position
+            # for purposes of calculating velocity
+            self.last_pos = self.last_pos or (data.position_x, data.position_y, data.position_z)
 
-        packet.x_lin_vel = velocity[0]
-        packet.y_lin_vel = velocity[1]
-        packet.z_lin_vel = velocity[2]
+            velocity = math_utils.calculate_velocity(
+                self.last_pos,
+                (data.position_x, data.position_y, data.position_z),
+                1.0/float(FRAME_RATE)
+            )
 
-        x, y, z, w = data.rotation_quaternion_x, data.rotation_quaternion_y, data.rotation_quaternion_z, data.rotation_quaternion_w
-        pitch, roll = math_utils.quaternion_to_pitch_and_roll(x, y, z, w)
-        packet.pitch_pos = pitch
-        packet.roll_pos = roll
+            packet.x_lin_vel = velocity[0]
+            packet.y_lin_vel = velocity[1]
+            packet.z_lin_vel = velocity[2]
 
-        self.last_pos = (data.position_x, data.position_y, data.position_z)
+            x, y, z, w = data.rotation_quaternion_x, data.rotation_quaternion_y, data.rotation_quaternion_z, data.rotation_quaternion_w
+            if (x, y, z, w) == (0, 0, 0, 0):
+                print("Received zero quaternion, skipping")
+                return
+            pitch, roll = math_utils.quaternion_to_pitch_and_roll(x, y, z, w)
+            packet.pitch_pos = pitch
+            packet.roll_pos = roll
+
+            self.last_pos = (data.position_x, data.position_y, data.position_z)
 
     def __del__(self):
         # Terminate NL2 connection here
