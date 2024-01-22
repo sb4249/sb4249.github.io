@@ -2,7 +2,7 @@ from scipy.spatial.transform import Rotation
 
 def quaternion_to_pitch_and_roll(x, y, z, w):
     quaternion = Rotation.from_quat([x, y, z, w])
-    eulerAngles = quaternion.as_euler('zyx', degrees=True)
+    eulerAngles = quaternion.as_euler('xzy', degrees=True)
 
     pitch, roll, _ = eulerAngles
 
