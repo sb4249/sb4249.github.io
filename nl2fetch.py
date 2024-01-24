@@ -3,7 +3,8 @@ import math_utils
 from nl2telemetry import NoLimits2
 from nl2telemetry.message import get_telemetry, Answer
 from nl2telemetry.message.reply import TelemetryData
-from globals import FRAME_RATE
+from globals import FRAME_RATE, LOGGING
+from logger import log_packet, log_nl2
 
 class NL2Fetch:
 
@@ -25,6 +26,11 @@ class NL2Fetch:
              return
 
         if data.in_play_mode:
+
+            if (LOGGING):
+                log_nl2(nl2_data=data)
+
+
             # if this is the first frame being received,
             # set the last position to the current position
             # for purposes of calculating velocity
@@ -49,6 +55,9 @@ class NL2Fetch:
             packet.roll_pos = roll
 
             self.last_pos = (data.position_x, data.position_y, data.position_z)
+
+            if (LOGGING):
+                log_packet(packetData=packet)
 
     def __del__(self):
         # Terminate NL2 connection here

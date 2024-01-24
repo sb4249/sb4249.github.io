@@ -9,3 +9,4 @@ MOTION_COMPUTER_PORT = 4001
 NL2_IP = '127.0.0.1'
 NL2_PORT = 15151
 FRAME_RATE = 30 # transmission rate in hz
+LOGGING = False #make true to generate logs
