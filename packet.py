@@ -20,7 +20,7 @@ class Packet:
         self.garbage = bytearray([0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00])
 
     def format_packet(self):
-        return struct.pack('!8s8slidddddddd8s',
+        return struct.pack('8s8slidddddddd8s',
                             self.header,
                             self.fsTimer,
                             self.tick,
