@@ -6,8 +6,8 @@ def quaternion_to_pitch_and_roll(x, y, z, w):
 
     pitch, roll, _ = eulerAngles
 
-    pitch = max(-15.5, min(pitch, 33.75))
-    roll = max(-40, min(roll, 40))
+    # pitch = max(-15.5, min(pitch, 33.75))
+    # roll = max(-40, min(roll, 40))
 
     return pitch, roll
 
