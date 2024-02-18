@@ -1,3 +1,5 @@
+"""This module serves as communication with NoLimits2 and allows for the application to recieve motion data for each frame of the simulation."""
+
 from packet import Packet
 import math_utils
 from nl2telemetry import NoLimits2
@@ -7,16 +9,21 @@ from globals import FRAME_RATE, LOGGING
 from logger import log_packet, log_nl2
 
 class NL2Fetch:
+    """This class provides the functions necessary to connect to NoLimits2, recieve data, and close the connection when necessary."""
 
     def __init__(self, ip, port):
+        """Initializes objects needed for network connection to NoLimits2."""
         # Initialize NL2 connection here
         print("starting nl2 connection")
         self.nl2 = NoLimits2(ip, port)
+        """Initializes an object that will allow the application to communicate with NoLimits2. This uses the nl2telemetry package to facilitate communication."""
         self.nl2.connect()
         self.last_pos = None
+        """Initializes a variable to track the last position of the roller-coaster cart. This will be used to calculate linear velocity over each frame of the simulation."""
 
 
     def nl2_get_telemetry(self, packet: Packet):
+        """This function recieves values from NoLimits2 including linear velocity in the x, y, and z directions and the rotation quaternions for the roller-coaster cart in 3D space. This data will later be manipulated to convert it into a form usable by the motion copmputer."""
         self.nl2.send(get_telemetry)
         data = Answer.get_data(self.nl2.receive())
 
