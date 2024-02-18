@@ -3,7 +3,15 @@
 from scipy.spatial.transform import Rotation
 
 def quaternion_to_pitch_and_roll(x, y, z, w):
-    """This function converts quaternions from NoLimits2 representing the rotation of the roller-coaster cart in 3D space (x, y, z, and w) into pitch and roll angles in degrees. It does this with an external library called scipy."""
+    """This function converts quaternions from NoLimits2 representing the rotation of the roller-coaster cart in 3D space (x, y, z, and w) into pitch and roll angles in degrees. It does this with an external library called scipy.
+    
+    :param x: Rotation quaternion x.  
+    :param y: Rotation quaternion y.  
+    :param z: Rotation quaternion z. 
+    :param w: Rotation quaternion w.  
+    
+    :return: The pitch and roll angles of the roller-coaster cart.
+    """
     quaternion = Rotation.from_quat([x, y, z, w])
     eulerAngles = quaternion.as_euler('xzy', degrees=True)
 
@@ -15,7 +23,14 @@ def quaternion_to_pitch_and_roll(x, y, z, w):
     return pitch, roll
 
 def calculate_velocity(lastPos, currentPos, timeDiff=0.03333333333):
-    """This function calculates the linear velocity in the x, y, and z directions for a given frame. It does this by taking the differnece in x, y, and z positions between frames and divides that by the time ellapsed over the frame (or 1/FramesPerSecond)."""
+    """This function calculates the linear velocity in the x, y, and z directions for a given frame. It does this by taking the differnece in x, y, and z positions between frames and divides that by the time ellapsed over the frame (or 1/FramesPerSecond).
+    
+    :param lastPos: A tuple containin the position of the roller-coaster cart last frame.  
+    :param currentPos: A tuple containing the position of the roller-coaster cart this frame.  
+    :param timeDiff: The amount of time in seconds ellapsed over each frame. Dependent on frame rate data is being sent at.  
+    
+    :return: The linear velocity of the cart in the x, y, and z directions
+    """
     pos1 = tuple(lastPos)
     pos2 = tuple(currentPos)
 
