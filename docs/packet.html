@@ -102,50 +102,71 @@
                     <h1 class="modulename">
 packet    </h1>
 
-                
+                        <div class="docstring"><p>This module is responsible for constructing the motion data packet in a form usable by the motion computer.</p>
+</div>
+
                         <input id="mod-packet-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
 
                         <label class="view-source-button" for="mod-packet-view-source"><span>View Source</span></label>
 
-                        <div class="pdoc-code codehilite"><pre><span></span><span id="L-1"><a href="#L-1"><span class="linenos"> 1</span></a><span class="kn">import</span> <span class="nn">struct</span>
-</span><span id="L-2"><a href="#L-2"><span class="linenos"> 2</span></a><span class="kn">import</span> <span class="nn">csv</span>
-</span><span id="L-3"><a href="#L-3"><span class="linenos"> 3</span></a>
-</span><span id="L-4"><a href="#L-4"><span class="linenos"> 4</span></a><span class="k">class</span> <span class="nc">Packet</span><span class="p">:</span>
+                        <div class="pdoc-code codehilite"><pre><span></span><span id="L-1"><a href="#L-1"><span class="linenos"> 1</span></a><span class="sd">&quot;&quot;&quot;This module is responsible for constructing the motion data packet in a form usable by the motion computer.&quot;&quot;&quot;</span>
+</span><span id="L-2"><a href="#L-2"><span class="linenos"> 2</span></a>
+</span><span id="L-3"><a href="#L-3"><span class="linenos"> 3</span></a><span class="kn">import</span> <span class="nn">struct</span>
+</span><span id="L-4"><a href="#L-4"><span class="linenos"> 4</span></a><span class="kn">import</span> <span class="nn">csv</span>
 </span><span id="L-5"><a href="#L-5"><span class="linenos"> 5</span></a>
-</span><span id="L-6"><a href="#L-6"><span class="linenos"> 6</span></a>    <span class="c1"># Default values are neutral machine position</span>
-</span><span id="L-7"><a href="#L-7"><span class="linenos"> 7</span></a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x_lin_vel</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">y_lin_vel</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">z_lin_vel</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">pitch_pos</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">roll_pos</span><span class="o">=</span><span class="mf">0.0</span><span class="p">):</span>
-</span><span id="L-8"><a href="#L-8"><span class="linenos"> 8</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">header</span> <span class="o">=</span> <span class="nb">bytearray</span><span class="p">([</span><span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x02</span><span class="p">,</span> <span class="mh">0x60</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">])</span>
-</span><span id="L-9"><a href="#L-9"><span class="linenos"> 9</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">fsTimer</span> <span class="o">=</span> <span class="nb">bytearray</span><span class="p">([</span><span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0xC0</span><span class="p">,</span> <span class="mh">0x47</span><span class="p">,</span> <span class="mh">0x61</span><span class="p">,</span> <span class="mh">0x24</span><span class="p">,</span> <span class="mh">0x40</span><span class="p">])</span>
-</span><span id="L-10"><a href="#L-10"><span class="linenos">10</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">tick</span> <span class="o">=</span> <span class="mi">0</span>
-</span><span id="L-11"><a href="#L-11"><span class="linenos">11</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">temp</span> <span class="o">=</span> <span class="mi">0</span> <span class="c1">#unused</span>
-</span><span id="L-12"><a href="#L-12"><span class="linenos">12</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">x_lin_vel</span> <span class="o">=</span> <span class="n">x_lin_vel</span>
-</span><span id="L-13"><a href="#L-13"><span class="linenos">13</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">y_lin_vel</span> <span class="o">=</span> <span class="n">y_lin_vel</span>
-</span><span id="L-14"><a href="#L-14"><span class="linenos">14</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">z_lin_vel</span> <span class="o">=</span> <span class="n">z_lin_vel</span>
-</span><span id="L-15"><a href="#L-15"><span class="linenos">15</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">pitch_ang_vel</span> <span class="o">=</span> <span class="mi">0</span> <span class="c1">#unused</span>
-</span><span id="L-16"><a href="#L-16"><span class="linenos">16</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">roll_ang_vel</span> <span class="o">=</span> <span class="mi">0</span> <span class="c1">#unused</span>
-</span><span id="L-17"><a href="#L-17"><span class="linenos">17</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">pitch_pos</span> <span class="o">=</span> <span class="n">pitch_pos</span>
-</span><span id="L-18"><a href="#L-18"><span class="linenos">18</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">roll_pos</span> <span class="o">=</span> <span class="n">roll_pos</span>
-</span><span id="L-19"><a href="#L-19"><span class="linenos">19</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">altitude</span> <span class="o">=</span> <span class="mi">0</span> <span class="c1">#unused</span>
-</span><span id="L-20"><a href="#L-20"><span class="linenos">20</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">garbage</span> <span class="o">=</span> <span class="nb">bytearray</span><span class="p">([</span><span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">])</span>
-</span><span id="L-21"><a href="#L-21"><span class="linenos">21</span></a>
-</span><span id="L-22"><a href="#L-22"><span class="linenos">22</span></a>    <span class="k">def</span> <span class="nf">format_packet</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="L-23"><a href="#L-23"><span class="linenos">23</span></a>        <span class="k">return</span> <span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;8s8slidddddddd8s&#39;</span><span class="p">,</span>
-</span><span id="L-24"><a href="#L-24"><span class="linenos">24</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="p">,</span>
-</span><span id="L-25"><a href="#L-25"><span class="linenos">25</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">fsTimer</span><span class="p">,</span>
-</span><span id="L-26"><a href="#L-26"><span class="linenos">26</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">tick</span><span class="p">,</span>
-</span><span id="L-27"><a href="#L-27"><span class="linenos">27</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">temp</span><span class="p">,</span>
-</span><span id="L-28"><a href="#L-28"><span class="linenos">28</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">x_lin_vel</span><span class="p">,</span>
-</span><span id="L-29"><a href="#L-29"><span class="linenos">29</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">y_lin_vel</span><span class="p">,</span>
-</span><span id="L-30"><a href="#L-30"><span class="linenos">30</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">z_lin_vel</span><span class="p">,</span>
-</span><span id="L-31"><a href="#L-31"><span class="linenos">31</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">pitch_ang_vel</span><span class="p">,</span>
-</span><span id="L-32"><a href="#L-32"><span class="linenos">32</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">roll_ang_vel</span><span class="p">,</span>
-</span><span id="L-33"><a href="#L-33"><span class="linenos">33</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">pitch_pos</span><span class="p">,</span>
-</span><span id="L-34"><a href="#L-34"><span class="linenos">34</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">roll_pos</span><span class="p">,</span>
-</span><span id="L-35"><a href="#L-35"><span class="linenos">35</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">altitude</span><span class="p">,</span>
-</span><span id="L-36"><a href="#L-36"><span class="linenos">36</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">garbage</span><span class="p">)</span>
-</span><span id="L-37"><a href="#L-37"><span class="linenos">37</span></a>
-</span><span id="L-38"><a href="#L-38"><span class="linenos">38</span></a>    <span class="k">def</span> <span class="nf">time_tick</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="L-39"><a href="#L-39"><span class="linenos">39</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">tick</span> <span class="o">+=</span> <span class="mi">1</span>
+</span><span id="L-6"><a href="#L-6"><span class="linenos"> 6</span></a><span class="k">class</span> <span class="nc">Packet</span><span class="p">:</span>
+</span><span id="L-7"><a href="#L-7"><span class="linenos"> 7</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;This class takes the values that the application has transformed as input (linear velocity in the x, y, and z direction, pitch angle, and roll angle) and constructs a packet from them that is readable by the motion computer. The whole packet should be exactly 88 bytes long.&quot;&quot;&quot;</span>
+</span><span id="L-8"><a href="#L-8"><span class="linenos"> 8</span></a>
+</span><span id="L-9"><a href="#L-9"><span class="linenos"> 9</span></a>    <span class="c1"># Default values are neutral machine position</span>
+</span><span id="L-10"><a href="#L-10"><span class="linenos">10</span></a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x_lin_vel</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">y_lin_vel</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">z_lin_vel</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">pitch_pos</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">roll_pos</span><span class="o">=</span><span class="mf">0.0</span><span class="p">):</span>
+</span><span id="L-11"><a href="#L-11"><span class="linenos">11</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;This function initializes variables that will be necessary to construct a properly formatted packet.&quot;&quot;&quot;</span>
+</span><span id="L-12"><a href="#L-12"><span class="linenos">12</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">header</span> <span class="o">=</span> <span class="nb">bytearray</span><span class="p">([</span><span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x02</span><span class="p">,</span> <span class="mh">0x60</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">])</span>
+</span><span id="L-13"><a href="#L-13"><span class="linenos">13</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;A header for the packets that will be sent. Mostly buffer bytes to allow packet to be correct size.&quot;&quot;&quot;</span>
+</span><span id="L-14"><a href="#L-14"><span class="linenos">14</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">fsTimer</span> <span class="o">=</span> <span class="nb">bytearray</span><span class="p">([</span><span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0xC0</span><span class="p">,</span> <span class="mh">0x47</span><span class="p">,</span> <span class="mh">0x61</span><span class="p">,</span> <span class="mh">0x24</span><span class="p">,</span> <span class="mh">0x40</span><span class="p">])</span>
+</span><span id="L-15"><a href="#L-15"><span class="linenos">15</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Information necessary for the motion computer&#39;s timer.&quot;&quot;&quot;</span>
+</span><span id="L-16"><a href="#L-16"><span class="linenos">16</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">tick</span> <span class="o">=</span> <span class="mi">0</span>
+</span><span id="L-17"><a href="#L-17"><span class="linenos">17</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;The frame that is currently being processed&quot;&quot;&quot;</span>
+</span><span id="L-18"><a href="#L-18"><span class="linenos">18</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">temp</span> <span class="o">=</span> <span class="mi">0</span> <span class="c1">#unused</span>
+</span><span id="L-19"><a href="#L-19"><span class="linenos">19</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;An unused variable in the motion computer.&quot;&quot;&quot;</span>
+</span><span id="L-20"><a href="#L-20"><span class="linenos">20</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">x_lin_vel</span> <span class="o">=</span> <span class="n">x_lin_vel</span>
+</span><span id="L-21"><a href="#L-21"><span class="linenos">21</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Linear velocity in the x direction for a particular frame.&quot;&quot;&quot;</span>
+</span><span id="L-22"><a href="#L-22"><span class="linenos">22</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">y_lin_vel</span> <span class="o">=</span> <span class="n">y_lin_vel</span>
+</span><span id="L-23"><a href="#L-23"><span class="linenos">23</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Linear velocity in the y direction for a particular frame.&quot;&quot;&quot;</span>
+</span><span id="L-24"><a href="#L-24"><span class="linenos">24</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">z_lin_vel</span> <span class="o">=</span> <span class="n">z_lin_vel</span>
+</span><span id="L-25"><a href="#L-25"><span class="linenos">25</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Linear velocity in the z direction for a particular frame.&quot;&quot;&quot;</span>
+</span><span id="L-26"><a href="#L-26"><span class="linenos">26</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">pitch_ang_vel</span> <span class="o">=</span> <span class="mi">0</span> <span class="c1">#unused</span>
+</span><span id="L-27"><a href="#L-27"><span class="linenos">27</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;An unused variable in the motion computer.&quot;&quot;&quot;</span>
+</span><span id="L-28"><a href="#L-28"><span class="linenos">28</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">roll_ang_vel</span> <span class="o">=</span> <span class="mi">0</span> <span class="c1">#unused</span>
+</span><span id="L-29"><a href="#L-29"><span class="linenos">29</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;An unused variable in the motion computer.&quot;&quot;&quot;</span>
+</span><span id="L-30"><a href="#L-30"><span class="linenos">30</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">pitch_pos</span> <span class="o">=</span> <span class="n">pitch_pos</span>
+</span><span id="L-31"><a href="#L-31"><span class="linenos">31</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;The pitch angle of the roller-coaster cart for a particular frame.&quot;&quot;&quot;</span>
+</span><span id="L-32"><a href="#L-32"><span class="linenos">32</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">roll_pos</span> <span class="o">=</span> <span class="n">roll_pos</span>
+</span><span id="L-33"><a href="#L-33"><span class="linenos">33</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;The roll angle of the roller-coaster cart for a particular frame.&quot;&quot;&quot;</span>
+</span><span id="L-34"><a href="#L-34"><span class="linenos">34</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">altitude</span> <span class="o">=</span> <span class="mi">0</span> <span class="c1">#unused</span>
+</span><span id="L-35"><a href="#L-35"><span class="linenos">35</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;An unused variable in the motion computer.&quot;&quot;&quot;</span>
+</span><span id="L-36"><a href="#L-36"><span class="linenos">36</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">garbage</span> <span class="o">=</span> <span class="nb">bytearray</span><span class="p">([</span><span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">])</span>
+</span><span id="L-37"><a href="#L-37"><span class="linenos">37</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Buffer data at the end of the packet to allow it to be the correct size to be accepted by the motion computer. Must be exactly 8 bytes.&quot;&quot;&quot;</span>
+</span><span id="L-38"><a href="#L-38"><span class="linenos">38</span></a>
+</span><span id="L-39"><a href="#L-39"><span class="linenos">39</span></a>    <span class="k">def</span> <span class="nf">format_packet</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="L-40"><a href="#L-40"><span class="linenos">40</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;This function formats the packet that will be sent to the motion computer.&quot;&quot;&quot;</span>
+</span><span id="L-41"><a href="#L-41"><span class="linenos">41</span></a>        <span class="k">return</span> <span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;8s8slidddddddd8s&#39;</span><span class="p">,</span>
+</span><span id="L-42"><a href="#L-42"><span class="linenos">42</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="p">,</span>
+</span><span id="L-43"><a href="#L-43"><span class="linenos">43</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">fsTimer</span><span class="p">,</span>
+</span><span id="L-44"><a href="#L-44"><span class="linenos">44</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">tick</span><span class="p">,</span>
+</span><span id="L-45"><a href="#L-45"><span class="linenos">45</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">temp</span><span class="p">,</span>
+</span><span id="L-46"><a href="#L-46"><span class="linenos">46</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">x_lin_vel</span><span class="p">,</span>
+</span><span id="L-47"><a href="#L-47"><span class="linenos">47</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">y_lin_vel</span><span class="p">,</span>
+</span><span id="L-48"><a href="#L-48"><span class="linenos">48</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">z_lin_vel</span><span class="p">,</span>
+</span><span id="L-49"><a href="#L-49"><span class="linenos">49</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">pitch_ang_vel</span><span class="p">,</span>
+</span><span id="L-50"><a href="#L-50"><span class="linenos">50</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">roll_ang_vel</span><span class="p">,</span>
+</span><span id="L-51"><a href="#L-51"><span class="linenos">51</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">pitch_pos</span><span class="p">,</span>
+</span><span id="L-52"><a href="#L-52"><span class="linenos">52</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">roll_pos</span><span class="p">,</span>
+</span><span id="L-53"><a href="#L-53"><span class="linenos">53</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">altitude</span><span class="p">,</span>
+</span><span id="L-54"><a href="#L-54"><span class="linenos">54</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">garbage</span><span class="p">)</span>
+</span><span id="L-55"><a href="#L-55"><span class="linenos">55</span></a>
+</span><span id="L-56"><a href="#L-56"><span class="linenos">56</span></a>    <span class="k">def</span> <span class="nf">time_tick</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="L-57"><a href="#L-57"><span class="linenos">57</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;This function incriments a variable that allows the application to track which frame is currently being processed.&quot;&quot;&quot;</span>
+</span><span id="L-58"><a href="#L-58"><span class="linenos">58</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">tick</span> <span class="o">+=</span> <span class="mi">1</span>
 </span></pre></div>
 
 
@@ -161,46 +182,65 @@ packet    </h1>
 
     </div>
     <a class="headerlink" href="#Packet"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="Packet-5"><a href="#Packet-5"><span class="linenos"> 5</span></a><span class="k">class</span> <span class="nc">Packet</span><span class="p">:</span>
-</span><span id="Packet-6"><a href="#Packet-6"><span class="linenos"> 6</span></a>
-</span><span id="Packet-7"><a href="#Packet-7"><span class="linenos"> 7</span></a>    <span class="c1"># Default values are neutral machine position</span>
-</span><span id="Packet-8"><a href="#Packet-8"><span class="linenos"> 8</span></a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x_lin_vel</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">y_lin_vel</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">z_lin_vel</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">pitch_pos</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">roll_pos</span><span class="o">=</span><span class="mf">0.0</span><span class="p">):</span>
-</span><span id="Packet-9"><a href="#Packet-9"><span class="linenos"> 9</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">header</span> <span class="o">=</span> <span class="nb">bytearray</span><span class="p">([</span><span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x02</span><span class="p">,</span> <span class="mh">0x60</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">])</span>
-</span><span id="Packet-10"><a href="#Packet-10"><span class="linenos">10</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">fsTimer</span> <span class="o">=</span> <span class="nb">bytearray</span><span class="p">([</span><span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0xC0</span><span class="p">,</span> <span class="mh">0x47</span><span class="p">,</span> <span class="mh">0x61</span><span class="p">,</span> <span class="mh">0x24</span><span class="p">,</span> <span class="mh">0x40</span><span class="p">])</span>
-</span><span id="Packet-11"><a href="#Packet-11"><span class="linenos">11</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">tick</span> <span class="o">=</span> <span class="mi">0</span>
-</span><span id="Packet-12"><a href="#Packet-12"><span class="linenos">12</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">temp</span> <span class="o">=</span> <span class="mi">0</span> <span class="c1">#unused</span>
-</span><span id="Packet-13"><a href="#Packet-13"><span class="linenos">13</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">x_lin_vel</span> <span class="o">=</span> <span class="n">x_lin_vel</span>
-</span><span id="Packet-14"><a href="#Packet-14"><span class="linenos">14</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">y_lin_vel</span> <span class="o">=</span> <span class="n">y_lin_vel</span>
-</span><span id="Packet-15"><a href="#Packet-15"><span class="linenos">15</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">z_lin_vel</span> <span class="o">=</span> <span class="n">z_lin_vel</span>
-</span><span id="Packet-16"><a href="#Packet-16"><span class="linenos">16</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">pitch_ang_vel</span> <span class="o">=</span> <span class="mi">0</span> <span class="c1">#unused</span>
-</span><span id="Packet-17"><a href="#Packet-17"><span class="linenos">17</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">roll_ang_vel</span> <span class="o">=</span> <span class="mi">0</span> <span class="c1">#unused</span>
-</span><span id="Packet-18"><a href="#Packet-18"><span class="linenos">18</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">pitch_pos</span> <span class="o">=</span> <span class="n">pitch_pos</span>
-</span><span id="Packet-19"><a href="#Packet-19"><span class="linenos">19</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">roll_pos</span> <span class="o">=</span> <span class="n">roll_pos</span>
-</span><span id="Packet-20"><a href="#Packet-20"><span class="linenos">20</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">altitude</span> <span class="o">=</span> <span class="mi">0</span> <span class="c1">#unused</span>
-</span><span id="Packet-21"><a href="#Packet-21"><span class="linenos">21</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">garbage</span> <span class="o">=</span> <span class="nb">bytearray</span><span class="p">([</span><span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">])</span>
-</span><span id="Packet-22"><a href="#Packet-22"><span class="linenos">22</span></a>
-</span><span id="Packet-23"><a href="#Packet-23"><span class="linenos">23</span></a>    <span class="k">def</span> <span class="nf">format_packet</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="Packet-24"><a href="#Packet-24"><span class="linenos">24</span></a>        <span class="k">return</span> <span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;8s8slidddddddd8s&#39;</span><span class="p">,</span>
-</span><span id="Packet-25"><a href="#Packet-25"><span class="linenos">25</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="p">,</span>
-</span><span id="Packet-26"><a href="#Packet-26"><span class="linenos">26</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">fsTimer</span><span class="p">,</span>
-</span><span id="Packet-27"><a href="#Packet-27"><span class="linenos">27</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">tick</span><span class="p">,</span>
-</span><span id="Packet-28"><a href="#Packet-28"><span class="linenos">28</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">temp</span><span class="p">,</span>
-</span><span id="Packet-29"><a href="#Packet-29"><span class="linenos">29</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">x_lin_vel</span><span class="p">,</span>
-</span><span id="Packet-30"><a href="#Packet-30"><span class="linenos">30</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">y_lin_vel</span><span class="p">,</span>
-</span><span id="Packet-31"><a href="#Packet-31"><span class="linenos">31</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">z_lin_vel</span><span class="p">,</span>
-</span><span id="Packet-32"><a href="#Packet-32"><span class="linenos">32</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">pitch_ang_vel</span><span class="p">,</span>
-</span><span id="Packet-33"><a href="#Packet-33"><span class="linenos">33</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">roll_ang_vel</span><span class="p">,</span>
-</span><span id="Packet-34"><a href="#Packet-34"><span class="linenos">34</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">pitch_pos</span><span class="p">,</span>
-</span><span id="Packet-35"><a href="#Packet-35"><span class="linenos">35</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">roll_pos</span><span class="p">,</span>
-</span><span id="Packet-36"><a href="#Packet-36"><span class="linenos">36</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">altitude</span><span class="p">,</span>
-</span><span id="Packet-37"><a href="#Packet-37"><span class="linenos">37</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">garbage</span><span class="p">)</span>
-</span><span id="Packet-38"><a href="#Packet-38"><span class="linenos">38</span></a>
-</span><span id="Packet-39"><a href="#Packet-39"><span class="linenos">39</span></a>    <span class="k">def</span> <span class="nf">time_tick</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="Packet-40"><a href="#Packet-40"><span class="linenos">40</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">tick</span> <span class="o">+=</span> <span class="mi">1</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="Packet-7"><a href="#Packet-7"><span class="linenos"> 7</span></a><span class="k">class</span> <span class="nc">Packet</span><span class="p">:</span>
+</span><span id="Packet-8"><a href="#Packet-8"><span class="linenos"> 8</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;This class takes the values that the application has transformed as input (linear velocity in the x, y, and z direction, pitch angle, and roll angle) and constructs a packet from them that is readable by the motion computer. The whole packet should be exactly 88 bytes long.&quot;&quot;&quot;</span>
+</span><span id="Packet-9"><a href="#Packet-9"><span class="linenos"> 9</span></a>
+</span><span id="Packet-10"><a href="#Packet-10"><span class="linenos">10</span></a>    <span class="c1"># Default values are neutral machine position</span>
+</span><span id="Packet-11"><a href="#Packet-11"><span class="linenos">11</span></a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x_lin_vel</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">y_lin_vel</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">z_lin_vel</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">pitch_pos</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">roll_pos</span><span class="o">=</span><span class="mf">0.0</span><span class="p">):</span>
+</span><span id="Packet-12"><a href="#Packet-12"><span class="linenos">12</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;This function initializes variables that will be necessary to construct a properly formatted packet.&quot;&quot;&quot;</span>
+</span><span id="Packet-13"><a href="#Packet-13"><span class="linenos">13</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">header</span> <span class="o">=</span> <span class="nb">bytearray</span><span class="p">([</span><span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x02</span><span class="p">,</span> <span class="mh">0x60</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">])</span>
+</span><span id="Packet-14"><a href="#Packet-14"><span class="linenos">14</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;A header for the packets that will be sent. Mostly buffer bytes to allow packet to be correct size.&quot;&quot;&quot;</span>
+</span><span id="Packet-15"><a href="#Packet-15"><span class="linenos">15</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">fsTimer</span> <span class="o">=</span> <span class="nb">bytearray</span><span class="p">([</span><span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0xC0</span><span class="p">,</span> <span class="mh">0x47</span><span class="p">,</span> <span class="mh">0x61</span><span class="p">,</span> <span class="mh">0x24</span><span class="p">,</span> <span class="mh">0x40</span><span class="p">])</span>
+</span><span id="Packet-16"><a href="#Packet-16"><span class="linenos">16</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Information necessary for the motion computer&#39;s timer.&quot;&quot;&quot;</span>
+</span><span id="Packet-17"><a href="#Packet-17"><span class="linenos">17</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">tick</span> <span class="o">=</span> <span class="mi">0</span>
+</span><span id="Packet-18"><a href="#Packet-18"><span class="linenos">18</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;The frame that is currently being processed&quot;&quot;&quot;</span>
+</span><span id="Packet-19"><a href="#Packet-19"><span class="linenos">19</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">temp</span> <span class="o">=</span> <span class="mi">0</span> <span class="c1">#unused</span>
+</span><span id="Packet-20"><a href="#Packet-20"><span class="linenos">20</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;An unused variable in the motion computer.&quot;&quot;&quot;</span>
+</span><span id="Packet-21"><a href="#Packet-21"><span class="linenos">21</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">x_lin_vel</span> <span class="o">=</span> <span class="n">x_lin_vel</span>
+</span><span id="Packet-22"><a href="#Packet-22"><span class="linenos">22</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Linear velocity in the x direction for a particular frame.&quot;&quot;&quot;</span>
+</span><span id="Packet-23"><a href="#Packet-23"><span class="linenos">23</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">y_lin_vel</span> <span class="o">=</span> <span class="n">y_lin_vel</span>
+</span><span id="Packet-24"><a href="#Packet-24"><span class="linenos">24</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Linear velocity in the y direction for a particular frame.&quot;&quot;&quot;</span>
+</span><span id="Packet-25"><a href="#Packet-25"><span class="linenos">25</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">z_lin_vel</span> <span class="o">=</span> <span class="n">z_lin_vel</span>
+</span><span id="Packet-26"><a href="#Packet-26"><span class="linenos">26</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Linear velocity in the z direction for a particular frame.&quot;&quot;&quot;</span>
+</span><span id="Packet-27"><a href="#Packet-27"><span class="linenos">27</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">pitch_ang_vel</span> <span class="o">=</span> <span class="mi">0</span> <span class="c1">#unused</span>
+</span><span id="Packet-28"><a href="#Packet-28"><span class="linenos">28</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;An unused variable in the motion computer.&quot;&quot;&quot;</span>
+</span><span id="Packet-29"><a href="#Packet-29"><span class="linenos">29</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">roll_ang_vel</span> <span class="o">=</span> <span class="mi">0</span> <span class="c1">#unused</span>
+</span><span id="Packet-30"><a href="#Packet-30"><span class="linenos">30</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;An unused variable in the motion computer.&quot;&quot;&quot;</span>
+</span><span id="Packet-31"><a href="#Packet-31"><span class="linenos">31</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">pitch_pos</span> <span class="o">=</span> <span class="n">pitch_pos</span>
+</span><span id="Packet-32"><a href="#Packet-32"><span class="linenos">32</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;The pitch angle of the roller-coaster cart for a particular frame.&quot;&quot;&quot;</span>
+</span><span id="Packet-33"><a href="#Packet-33"><span class="linenos">33</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">roll_pos</span> <span class="o">=</span> <span class="n">roll_pos</span>
+</span><span id="Packet-34"><a href="#Packet-34"><span class="linenos">34</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;The roll angle of the roller-coaster cart for a particular frame.&quot;&quot;&quot;</span>
+</span><span id="Packet-35"><a href="#Packet-35"><span class="linenos">35</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">altitude</span> <span class="o">=</span> <span class="mi">0</span> <span class="c1">#unused</span>
+</span><span id="Packet-36"><a href="#Packet-36"><span class="linenos">36</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;An unused variable in the motion computer.&quot;&quot;&quot;</span>
+</span><span id="Packet-37"><a href="#Packet-37"><span class="linenos">37</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">garbage</span> <span class="o">=</span> <span class="nb">bytearray</span><span class="p">([</span><span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">])</span>
+</span><span id="Packet-38"><a href="#Packet-38"><span class="linenos">38</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Buffer data at the end of the packet to allow it to be the correct size to be accepted by the motion computer. Must be exactly 8 bytes.&quot;&quot;&quot;</span>
+</span><span id="Packet-39"><a href="#Packet-39"><span class="linenos">39</span></a>
+</span><span id="Packet-40"><a href="#Packet-40"><span class="linenos">40</span></a>    <span class="k">def</span> <span class="nf">format_packet</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="Packet-41"><a href="#Packet-41"><span class="linenos">41</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;This function formats the packet that will be sent to the motion computer.&quot;&quot;&quot;</span>
+</span><span id="Packet-42"><a href="#Packet-42"><span class="linenos">42</span></a>        <span class="k">return</span> <span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;8s8slidddddddd8s&#39;</span><span class="p">,</span>
+</span><span id="Packet-43"><a href="#Packet-43"><span class="linenos">43</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="p">,</span>
+</span><span id="Packet-44"><a href="#Packet-44"><span class="linenos">44</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">fsTimer</span><span class="p">,</span>
+</span><span id="Packet-45"><a href="#Packet-45"><span class="linenos">45</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">tick</span><span class="p">,</span>
+</span><span id="Packet-46"><a href="#Packet-46"><span class="linenos">46</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">temp</span><span class="p">,</span>
+</span><span id="Packet-47"><a href="#Packet-47"><span class="linenos">47</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">x_lin_vel</span><span class="p">,</span>
+</span><span id="Packet-48"><a href="#Packet-48"><span class="linenos">48</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">y_lin_vel</span><span class="p">,</span>
+</span><span id="Packet-49"><a href="#Packet-49"><span class="linenos">49</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">z_lin_vel</span><span class="p">,</span>
+</span><span id="Packet-50"><a href="#Packet-50"><span class="linenos">50</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">pitch_ang_vel</span><span class="p">,</span>
+</span><span id="Packet-51"><a href="#Packet-51"><span class="linenos">51</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">roll_ang_vel</span><span class="p">,</span>
+</span><span id="Packet-52"><a href="#Packet-52"><span class="linenos">52</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">pitch_pos</span><span class="p">,</span>
+</span><span id="Packet-53"><a href="#Packet-53"><span class="linenos">53</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">roll_pos</span><span class="p">,</span>
+</span><span id="Packet-54"><a href="#Packet-54"><span class="linenos">54</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">altitude</span><span class="p">,</span>
+</span><span id="Packet-55"><a href="#Packet-55"><span class="linenos">55</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">garbage</span><span class="p">)</span>
+</span><span id="Packet-56"><a href="#Packet-56"><span class="linenos">56</span></a>
+</span><span id="Packet-57"><a href="#Packet-57"><span class="linenos">57</span></a>    <span class="k">def</span> <span class="nf">time_tick</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="Packet-58"><a href="#Packet-58"><span class="linenos">58</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;This function incriments a variable that allows the application to track which frame is currently being processed.&quot;&quot;&quot;</span>
+</span><span id="Packet-59"><a href="#Packet-59"><span class="linenos">59</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">tick</span> <span class="o">+=</span> <span class="mi">1</span>
 </span></pre></div>
 
 
-    
+            <div class="docstring"><p>This class takes the values that the application has transformed as input (linear velocity in the x, y, and z direction, pitch angle, and roll angle) and constructs a packet from them that is readable by the motion computer. The whole packet should be exactly 88 bytes long.</p>
+</div>
+
 
                             <div id="Packet.__init__" class="classattr">
                                         <input id="Packet.__init__-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
@@ -212,24 +252,40 @@ packet    </h1>
 
     </div>
     <a class="headerlink" href="#Packet.__init__"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="Packet.__init__-8"><a href="#Packet.__init__-8"><span class="linenos"> 8</span></a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x_lin_vel</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">y_lin_vel</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">z_lin_vel</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">pitch_pos</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">roll_pos</span><span class="o">=</span><span class="mf">0.0</span><span class="p">):</span>
-</span><span id="Packet.__init__-9"><a href="#Packet.__init__-9"><span class="linenos"> 9</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">header</span> <span class="o">=</span> <span class="nb">bytearray</span><span class="p">([</span><span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x02</span><span class="p">,</span> <span class="mh">0x60</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">])</span>
-</span><span id="Packet.__init__-10"><a href="#Packet.__init__-10"><span class="linenos">10</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">fsTimer</span> <span class="o">=</span> <span class="nb">bytearray</span><span class="p">([</span><span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0xC0</span><span class="p">,</span> <span class="mh">0x47</span><span class="p">,</span> <span class="mh">0x61</span><span class="p">,</span> <span class="mh">0x24</span><span class="p">,</span> <span class="mh">0x40</span><span class="p">])</span>
-</span><span id="Packet.__init__-11"><a href="#Packet.__init__-11"><span class="linenos">11</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">tick</span> <span class="o">=</span> <span class="mi">0</span>
-</span><span id="Packet.__init__-12"><a href="#Packet.__init__-12"><span class="linenos">12</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">temp</span> <span class="o">=</span> <span class="mi">0</span> <span class="c1">#unused</span>
-</span><span id="Packet.__init__-13"><a href="#Packet.__init__-13"><span class="linenos">13</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">x_lin_vel</span> <span class="o">=</span> <span class="n">x_lin_vel</span>
-</span><span id="Packet.__init__-14"><a href="#Packet.__init__-14"><span class="linenos">14</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">y_lin_vel</span> <span class="o">=</span> <span class="n">y_lin_vel</span>
-</span><span id="Packet.__init__-15"><a href="#Packet.__init__-15"><span class="linenos">15</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">z_lin_vel</span> <span class="o">=</span> <span class="n">z_lin_vel</span>
-</span><span id="Packet.__init__-16"><a href="#Packet.__init__-16"><span class="linenos">16</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">pitch_ang_vel</span> <span class="o">=</span> <span class="mi">0</span> <span class="c1">#unused</span>
-</span><span id="Packet.__init__-17"><a href="#Packet.__init__-17"><span class="linenos">17</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">roll_ang_vel</span> <span class="o">=</span> <span class="mi">0</span> <span class="c1">#unused</span>
-</span><span id="Packet.__init__-18"><a href="#Packet.__init__-18"><span class="linenos">18</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">pitch_pos</span> <span class="o">=</span> <span class="n">pitch_pos</span>
-</span><span id="Packet.__init__-19"><a href="#Packet.__init__-19"><span class="linenos">19</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">roll_pos</span> <span class="o">=</span> <span class="n">roll_pos</span>
-</span><span id="Packet.__init__-20"><a href="#Packet.__init__-20"><span class="linenos">20</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">altitude</span> <span class="o">=</span> <span class="mi">0</span> <span class="c1">#unused</span>
-</span><span id="Packet.__init__-21"><a href="#Packet.__init__-21"><span class="linenos">21</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">garbage</span> <span class="o">=</span> <span class="nb">bytearray</span><span class="p">([</span><span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">])</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="Packet.__init__-11"><a href="#Packet.__init__-11"><span class="linenos">11</span></a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x_lin_vel</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">y_lin_vel</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">z_lin_vel</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">pitch_pos</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">roll_pos</span><span class="o">=</span><span class="mf">0.0</span><span class="p">):</span>
+</span><span id="Packet.__init__-12"><a href="#Packet.__init__-12"><span class="linenos">12</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;This function initializes variables that will be necessary to construct a properly formatted packet.&quot;&quot;&quot;</span>
+</span><span id="Packet.__init__-13"><a href="#Packet.__init__-13"><span class="linenos">13</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">header</span> <span class="o">=</span> <span class="nb">bytearray</span><span class="p">([</span><span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x02</span><span class="p">,</span> <span class="mh">0x60</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">])</span>
+</span><span id="Packet.__init__-14"><a href="#Packet.__init__-14"><span class="linenos">14</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;A header for the packets that will be sent. Mostly buffer bytes to allow packet to be correct size.&quot;&quot;&quot;</span>
+</span><span id="Packet.__init__-15"><a href="#Packet.__init__-15"><span class="linenos">15</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">fsTimer</span> <span class="o">=</span> <span class="nb">bytearray</span><span class="p">([</span><span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0xC0</span><span class="p">,</span> <span class="mh">0x47</span><span class="p">,</span> <span class="mh">0x61</span><span class="p">,</span> <span class="mh">0x24</span><span class="p">,</span> <span class="mh">0x40</span><span class="p">])</span>
+</span><span id="Packet.__init__-16"><a href="#Packet.__init__-16"><span class="linenos">16</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Information necessary for the motion computer&#39;s timer.&quot;&quot;&quot;</span>
+</span><span id="Packet.__init__-17"><a href="#Packet.__init__-17"><span class="linenos">17</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">tick</span> <span class="o">=</span> <span class="mi">0</span>
+</span><span id="Packet.__init__-18"><a href="#Packet.__init__-18"><span class="linenos">18</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;The frame that is currently being processed&quot;&quot;&quot;</span>
+</span><span id="Packet.__init__-19"><a href="#Packet.__init__-19"><span class="linenos">19</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">temp</span> <span class="o">=</span> <span class="mi">0</span> <span class="c1">#unused</span>
+</span><span id="Packet.__init__-20"><a href="#Packet.__init__-20"><span class="linenos">20</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;An unused variable in the motion computer.&quot;&quot;&quot;</span>
+</span><span id="Packet.__init__-21"><a href="#Packet.__init__-21"><span class="linenos">21</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">x_lin_vel</span> <span class="o">=</span> <span class="n">x_lin_vel</span>
+</span><span id="Packet.__init__-22"><a href="#Packet.__init__-22"><span class="linenos">22</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Linear velocity in the x direction for a particular frame.&quot;&quot;&quot;</span>
+</span><span id="Packet.__init__-23"><a href="#Packet.__init__-23"><span class="linenos">23</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">y_lin_vel</span> <span class="o">=</span> <span class="n">y_lin_vel</span>
+</span><span id="Packet.__init__-24"><a href="#Packet.__init__-24"><span class="linenos">24</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Linear velocity in the y direction for a particular frame.&quot;&quot;&quot;</span>
+</span><span id="Packet.__init__-25"><a href="#Packet.__init__-25"><span class="linenos">25</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">z_lin_vel</span> <span class="o">=</span> <span class="n">z_lin_vel</span>
+</span><span id="Packet.__init__-26"><a href="#Packet.__init__-26"><span class="linenos">26</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Linear velocity in the z direction for a particular frame.&quot;&quot;&quot;</span>
+</span><span id="Packet.__init__-27"><a href="#Packet.__init__-27"><span class="linenos">27</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">pitch_ang_vel</span> <span class="o">=</span> <span class="mi">0</span> <span class="c1">#unused</span>
+</span><span id="Packet.__init__-28"><a href="#Packet.__init__-28"><span class="linenos">28</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;An unused variable in the motion computer.&quot;&quot;&quot;</span>
+</span><span id="Packet.__init__-29"><a href="#Packet.__init__-29"><span class="linenos">29</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">roll_ang_vel</span> <span class="o">=</span> <span class="mi">0</span> <span class="c1">#unused</span>
+</span><span id="Packet.__init__-30"><a href="#Packet.__init__-30"><span class="linenos">30</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;An unused variable in the motion computer.&quot;&quot;&quot;</span>
+</span><span id="Packet.__init__-31"><a href="#Packet.__init__-31"><span class="linenos">31</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">pitch_pos</span> <span class="o">=</span> <span class="n">pitch_pos</span>
+</span><span id="Packet.__init__-32"><a href="#Packet.__init__-32"><span class="linenos">32</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;The pitch angle of the roller-coaster cart for a particular frame.&quot;&quot;&quot;</span>
+</span><span id="Packet.__init__-33"><a href="#Packet.__init__-33"><span class="linenos">33</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">roll_pos</span> <span class="o">=</span> <span class="n">roll_pos</span>
+</span><span id="Packet.__init__-34"><a href="#Packet.__init__-34"><span class="linenos">34</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;The roll angle of the roller-coaster cart for a particular frame.&quot;&quot;&quot;</span>
+</span><span id="Packet.__init__-35"><a href="#Packet.__init__-35"><span class="linenos">35</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">altitude</span> <span class="o">=</span> <span class="mi">0</span> <span class="c1">#unused</span>
+</span><span id="Packet.__init__-36"><a href="#Packet.__init__-36"><span class="linenos">36</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;An unused variable in the motion computer.&quot;&quot;&quot;</span>
+</span><span id="Packet.__init__-37"><a href="#Packet.__init__-37"><span class="linenos">37</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">garbage</span> <span class="o">=</span> <span class="nb">bytearray</span><span class="p">([</span><span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">])</span>
+</span><span id="Packet.__init__-38"><a href="#Packet.__init__-38"><span class="linenos">38</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Buffer data at the end of the packet to allow it to be the correct size to be accepted by the motion computer. Must be exactly 8 bytes.&quot;&quot;&quot;</span>
 </span></pre></div>
 
 
-    
+            <div class="docstring"><p>This function initializes variables that will be necessary to construct a properly formatted packet.</p>
+</div>
+
 
                             </div>
                             <div id="Packet.header" class="classattr">
@@ -240,7 +296,9 @@ packet    </h1>
     </div>
     <a class="headerlink" href="#Packet.header"></a>
     
-    
+            <div class="docstring"><p>A header for the packets that will be sent. Mostly buffer bytes to allow packet to be correct size.</p>
+</div>
+
 
                             </div>
                             <div id="Packet.fsTimer" class="classattr">
@@ -251,7 +309,9 @@ packet    </h1>
     </div>
     <a class="headerlink" href="#Packet.fsTimer"></a>
     
-    
+            <div class="docstring"><p>Information necessary for the motion computer's timer.</p>
+</div>
+
 
                             </div>
                             <div id="Packet.tick" class="classattr">
@@ -262,7 +322,9 @@ packet    </h1>
     </div>
     <a class="headerlink" href="#Packet.tick"></a>
     
-    
+            <div class="docstring"><p>The frame that is currently being processed</p>
+</div>
+
 
                             </div>
                             <div id="Packet.temp" class="classattr">
@@ -273,7 +335,9 @@ packet    </h1>
     </div>
     <a class="headerlink" href="#Packet.temp"></a>
     
-    
+            <div class="docstring"><p>An unused variable in the motion computer.</p>
+</div>
+
 
                             </div>
                             <div id="Packet.x_lin_vel" class="classattr">
@@ -284,7 +348,9 @@ packet    </h1>
     </div>
     <a class="headerlink" href="#Packet.x_lin_vel"></a>
     
-    
+            <div class="docstring"><p>Linear velocity in the x direction for a particular frame.</p>
+</div>
+
 
                             </div>
                             <div id="Packet.y_lin_vel" class="classattr">
@@ -295,7 +361,9 @@ packet    </h1>
     </div>
     <a class="headerlink" href="#Packet.y_lin_vel"></a>
     
-    
+            <div class="docstring"><p>Linear velocity in the y direction for a particular frame.</p>
+</div>
+
 
                             </div>
                             <div id="Packet.z_lin_vel" class="classattr">
@@ -306,7 +374,9 @@ packet    </h1>
     </div>
     <a class="headerlink" href="#Packet.z_lin_vel"></a>
     
-    
+            <div class="docstring"><p>Linear velocity in the z direction for a particular frame.</p>
+</div>
+
 
                             </div>
                             <div id="Packet.pitch_ang_vel" class="classattr">
@@ -317,7 +387,9 @@ packet    </h1>
     </div>
     <a class="headerlink" href="#Packet.pitch_ang_vel"></a>
     
-    
+            <div class="docstring"><p>An unused variable in the motion computer.</p>
+</div>
+
 
                             </div>
                             <div id="Packet.roll_ang_vel" class="classattr">
@@ -328,7 +400,9 @@ packet    </h1>
     </div>
     <a class="headerlink" href="#Packet.roll_ang_vel"></a>
     
-    
+            <div class="docstring"><p>An unused variable in the motion computer.</p>
+</div>
+
 
                             </div>
                             <div id="Packet.pitch_pos" class="classattr">
@@ -339,7 +413,9 @@ packet    </h1>
     </div>
     <a class="headerlink" href="#Packet.pitch_pos"></a>
     
-    
+            <div class="docstring"><p>The pitch angle of the roller-coaster cart for a particular frame.</p>
+</div>
+
 
                             </div>
                             <div id="Packet.roll_pos" class="classattr">
@@ -350,7 +426,9 @@ packet    </h1>
     </div>
     <a class="headerlink" href="#Packet.roll_pos"></a>
     
-    
+            <div class="docstring"><p>The roll angle of the roller-coaster cart for a particular frame.</p>
+</div>
+
 
                             </div>
                             <div id="Packet.altitude" class="classattr">
@@ -361,7 +439,9 @@ packet    </h1>
     </div>
     <a class="headerlink" href="#Packet.altitude"></a>
     
-    
+            <div class="docstring"><p>An unused variable in the motion computer.</p>
+</div>
+
 
                             </div>
                             <div id="Packet.garbage" class="classattr">
@@ -372,7 +452,9 @@ packet    </h1>
     </div>
     <a class="headerlink" href="#Packet.garbage"></a>
     
-    
+            <div class="docstring"><p>Buffer data at the end of the packet to allow it to be the correct size to be accepted by the motion computer. Must be exactly 8 bytes.</p>
+</div>
+
 
                             </div>
                             <div id="Packet.format_packet" class="classattr">
@@ -386,25 +468,28 @@ packet    </h1>
 
     </div>
     <a class="headerlink" href="#Packet.format_packet"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="Packet.format_packet-23"><a href="#Packet.format_packet-23"><span class="linenos">23</span></a>    <span class="k">def</span> <span class="nf">format_packet</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="Packet.format_packet-24"><a href="#Packet.format_packet-24"><span class="linenos">24</span></a>        <span class="k">return</span> <span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;8s8slidddddddd8s&#39;</span><span class="p">,</span>
-</span><span id="Packet.format_packet-25"><a href="#Packet.format_packet-25"><span class="linenos">25</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="p">,</span>
-</span><span id="Packet.format_packet-26"><a href="#Packet.format_packet-26"><span class="linenos">26</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">fsTimer</span><span class="p">,</span>
-</span><span id="Packet.format_packet-27"><a href="#Packet.format_packet-27"><span class="linenos">27</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">tick</span><span class="p">,</span>
-</span><span id="Packet.format_packet-28"><a href="#Packet.format_packet-28"><span class="linenos">28</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">temp</span><span class="p">,</span>
-</span><span id="Packet.format_packet-29"><a href="#Packet.format_packet-29"><span class="linenos">29</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">x_lin_vel</span><span class="p">,</span>
-</span><span id="Packet.format_packet-30"><a href="#Packet.format_packet-30"><span class="linenos">30</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">y_lin_vel</span><span class="p">,</span>
-</span><span id="Packet.format_packet-31"><a href="#Packet.format_packet-31"><span class="linenos">31</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">z_lin_vel</span><span class="p">,</span>
-</span><span id="Packet.format_packet-32"><a href="#Packet.format_packet-32"><span class="linenos">32</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">pitch_ang_vel</span><span class="p">,</span>
-</span><span id="Packet.format_packet-33"><a href="#Packet.format_packet-33"><span class="linenos">33</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">roll_ang_vel</span><span class="p">,</span>
-</span><span id="Packet.format_packet-34"><a href="#Packet.format_packet-34"><span class="linenos">34</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">pitch_pos</span><span class="p">,</span>
-</span><span id="Packet.format_packet-35"><a href="#Packet.format_packet-35"><span class="linenos">35</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">roll_pos</span><span class="p">,</span>
-</span><span id="Packet.format_packet-36"><a href="#Packet.format_packet-36"><span class="linenos">36</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">altitude</span><span class="p">,</span>
-</span><span id="Packet.format_packet-37"><a href="#Packet.format_packet-37"><span class="linenos">37</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">garbage</span><span class="p">)</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="Packet.format_packet-40"><a href="#Packet.format_packet-40"><span class="linenos">40</span></a>    <span class="k">def</span> <span class="nf">format_packet</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="Packet.format_packet-41"><a href="#Packet.format_packet-41"><span class="linenos">41</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;This function formats the packet that will be sent to the motion computer.&quot;&quot;&quot;</span>
+</span><span id="Packet.format_packet-42"><a href="#Packet.format_packet-42"><span class="linenos">42</span></a>        <span class="k">return</span> <span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;8s8slidddddddd8s&#39;</span><span class="p">,</span>
+</span><span id="Packet.format_packet-43"><a href="#Packet.format_packet-43"><span class="linenos">43</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="p">,</span>
+</span><span id="Packet.format_packet-44"><a href="#Packet.format_packet-44"><span class="linenos">44</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">fsTimer</span><span class="p">,</span>
+</span><span id="Packet.format_packet-45"><a href="#Packet.format_packet-45"><span class="linenos">45</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">tick</span><span class="p">,</span>
+</span><span id="Packet.format_packet-46"><a href="#Packet.format_packet-46"><span class="linenos">46</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">temp</span><span class="p">,</span>
+</span><span id="Packet.format_packet-47"><a href="#Packet.format_packet-47"><span class="linenos">47</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">x_lin_vel</span><span class="p">,</span>
+</span><span id="Packet.format_packet-48"><a href="#Packet.format_packet-48"><span class="linenos">48</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">y_lin_vel</span><span class="p">,</span>
+</span><span id="Packet.format_packet-49"><a href="#Packet.format_packet-49"><span class="linenos">49</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">z_lin_vel</span><span class="p">,</span>
+</span><span id="Packet.format_packet-50"><a href="#Packet.format_packet-50"><span class="linenos">50</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">pitch_ang_vel</span><span class="p">,</span>
+</span><span id="Packet.format_packet-51"><a href="#Packet.format_packet-51"><span class="linenos">51</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">roll_ang_vel</span><span class="p">,</span>
+</span><span id="Packet.format_packet-52"><a href="#Packet.format_packet-52"><span class="linenos">52</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">pitch_pos</span><span class="p">,</span>
+</span><span id="Packet.format_packet-53"><a href="#Packet.format_packet-53"><span class="linenos">53</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">roll_pos</span><span class="p">,</span>
+</span><span id="Packet.format_packet-54"><a href="#Packet.format_packet-54"><span class="linenos">54</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">altitude</span><span class="p">,</span>
+</span><span id="Packet.format_packet-55"><a href="#Packet.format_packet-55"><span class="linenos">55</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">garbage</span><span class="p">)</span>
 </span></pre></div>
 
 
-    
+            <div class="docstring"><p>This function formats the packet that will be sent to the motion computer.</p>
+</div>
+
 
                             </div>
                             <div id="Packet.time_tick" class="classattr">
@@ -418,12 +503,15 @@ packet    </h1>
 
     </div>
     <a class="headerlink" href="#Packet.time_tick"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="Packet.time_tick-39"><a href="#Packet.time_tick-39"><span class="linenos">39</span></a>    <span class="k">def</span> <span class="nf">time_tick</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="Packet.time_tick-40"><a href="#Packet.time_tick-40"><span class="linenos">40</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">tick</span> <span class="o">+=</span> <span class="mi">1</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="Packet.time_tick-57"><a href="#Packet.time_tick-57"><span class="linenos">57</span></a>    <span class="k">def</span> <span class="nf">time_tick</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="Packet.time_tick-58"><a href="#Packet.time_tick-58"><span class="linenos">58</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;This function incriments a variable that allows the application to track which frame is currently being processed.&quot;&quot;&quot;</span>
+</span><span id="Packet.time_tick-59"><a href="#Packet.time_tick-59"><span class="linenos">59</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">tick</span> <span class="o">+=</span> <span class="mi">1</span>
 </span></pre></div>
 
 
-    
+            <div class="docstring"><p>This function incriments a variable that allows the application to track which frame is currently being processed.</p>
+</div>
+
 
                             </div>
                 </section>
