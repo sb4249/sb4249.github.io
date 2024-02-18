@@ -1,3 +1,5 @@
+"""This module acts as a wrapper for all of the other modules. It initializes the client socket and NoLimits2 connection and loops through recieving data, constructing a packet, and sending it to the motion computer."""
+
 import signal
 import sys
 import time
