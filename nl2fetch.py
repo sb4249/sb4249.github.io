@@ -11,7 +11,7 @@ import nl2telemetry.transmitter
 from typing import Tuple
 
 class NL2Fetch:
-    """This class provides the functions necessary to connect to NoLimits2, recieve data, and close the connection when necessary."""
+    """This class provides the functions necessary to connect to NoLimits2, recieve data, and close the connection when necessary"""
 
     def __init__(self, ip: str, port: int):
         """Initializes objects needed for network connection to NoLimits2."""
