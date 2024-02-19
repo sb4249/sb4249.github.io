@@ -20,9 +20,7 @@ jobs:
         with:
           python-version: '3.12'
 
-      # ADJUST THIS: install all dependencies (including pdoc)
       - run: pip install pdoc scipy
-      # We use a custom build script for pdoc itself, ideally you just run `pdoc -o docs/ ...` here.
       - run: make doc
 
       - uses: actions/upload-pages-artifact@v3
