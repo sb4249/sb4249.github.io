@@ -29,7 +29,7 @@ def calculate_velocity(lastPos, currentPos, timeDiff=0.03333333333):
     :param currentPos: A tuple containing the position of the roller-coaster cart this frame.  
     :param timeDiff: The amount of time in seconds ellapsed over each frame. Dependent on frame rate data is being sent at.  
     
-    :return: The linear velocity of the cart in the x, y, and z directions
+    :return: The linear velocity of the cart in the x, y, and z directions.
     """
     pos1 = tuple(lastPos)
     pos2 = tuple(currentPos)

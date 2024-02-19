@@ -6,8 +6,14 @@ from nl2telemetry.message.reply import TelemetryData
 from packet import Packet
 
 
-def write(data: str, fileName: str):
-    """This function is the on actually writing data to a log file. It will find the file and write the provided data to it if it is emtpy and append the data if it already contains some."""
+def write(data: str, fileName: str) -> None:
+    """This function is the on actually writing data to a log file. It will find the file and write the provided data to it if it is emtpy and append the data if it already contains some.
+    
+    :param data: Data that is to be written in a particular location. This will be the log data the program is trying to write.  
+    :param fileName: The log file that data is being written to.  
+    
+    :return: None.
+    """
 
     #get file path
     fileName += str(datetime.datetime.now())
@@ -18,8 +24,13 @@ def write(data: str, fileName: str):
         output.write(data)
 
 
-def log_nl2(nl2_data: TelemetryData):
-    """This function retrieves data from NoLimits2, formats it into the correct form for a log file, and then writes it to a log file called `nl2_data`"""
+def log_nl2(nl2_data: TelemetryData) -> None:
+    """This function retrieves data from NoLimits2, formats it into the correct form for a log file, and then writes it to a log file called `nl2_data`
+    
+    :param nl2_data: Unmodified motion data for a particular frame recieved from NoLimits2.  
+    
+    :return: None.
+    """
     data = ""
     data += "position x: " + str(nl2_data.position_x) + "\n"
     data += "position y: " + str(nl2_data.position_y) + "\n"
@@ -32,8 +43,13 @@ def log_nl2(nl2_data: TelemetryData):
 
     write(data=data, fileName="nl2_data")
 
-def log_packet(packetData: Packet):
-    """This function retrieves data from the packets the applcation constructs, formats it into the correct form for a log file, and then writes it to a log file called `packet_data`"""
+def log_packet(packetData: Packet) -> None:
+    """This function retrieves data from the packets the applcation constructs, formats it into the correct form for a log file, and then writes it to a log file called `packet_data`
+    
+    :param packetData: Motion data formatted into a packet that is readable by the motion computer and ready to be sent.  
+    
+    :return: None.
+    """
     data = ""
     data += "x_lin_vel: " + str(packetData.x_lin_vel) + "\n"
     data += "y_lin_vel: " + str(packetData.y_lin_vel) + "\n"
