@@ -4,7 +4,7 @@ import socket
 
 class Client:
     """This class contains all of the neccesary functions to initiate communication with the motion computer, send data to the motion computer, and close the socket conenction to the motion computer."""
-    def __init__(self, ip, port):
+    def __init__(self, ip: str, port: int):
         """Initializes objects needed for network connection."""
         self.ip = ip
         """The IP of the motion computer."""
@@ -13,8 +13,13 @@ class Client:
         self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         """The socket object used for communication between the show computer and the motion computer."""
 
-    def send_data(self, data):
-        """This function sends a formatted packet of motion data for one frame to the motion computer."""
+    def send_data(self, data) -> None:
+        """This function sends a formatted packet of motion data for one frame to the motion computer.
+        
+        :param data: Data set to be sent to the motion computer. Should be a correctly formatted packet for this application.
+        
+        :return: None
+        """
         try:
             self.client_socket.sendto(data, (self.ip, self.port))
 
