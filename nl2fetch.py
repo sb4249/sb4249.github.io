@@ -7,28 +7,29 @@ from nl2telemetry.message import get_telemetry, Answer
 from nl2telemetry.message.reply import TelemetryData
 from globals import FRAME_RATE, LOGGING
 from logger import log_packet, log_nl2
+import nl2telemetry.transmitter
+from typing import Tuple
 
 class NL2Fetch:
     """This class provides the functions necessary to connect to NoLimits2, recieve data, and close the connection when necessary."""
 
-    def __init__(self, ip, port):
+    def __init__(self, ip: str, port: int):
         """Initializes objects needed for network connection to NoLimits2."""
         # Initialize NL2 connection here
         print("starting nl2 connection")
-        self.nl2 = NoLimits2(ip, port)
+        self.nl2: nl2telemetry.transmitter.TcpTransmitter = NoLimits2(ip, port)
         """Initializes an object that will allow the application to communicate with NoLimits2. This uses the nl2telemetry package to facilitate communication."""
         self.nl2.connect()
-        self.last_pos = None
-        """Initializes a variable to track the last position of the roller-coaster cart. This will be used to calculate linear velocity over each frame of the simulation."""
+        self.last_pos: Tuple[int, int, int] = None
+        """Initializes a variable to track the last position of the roller-coaster cart. This will be used to calculate linear velocity over each frame of the simulation. Each value in the tuple represents the x, y, and z position of the roller-coaster cart."""
 
 
-    def nl2_get_telemetry(self, packet: Packet):
-        """This function recieves values from NoLimits2 including linear velocity in the x, y, and z directions and the rotation quaternions for the roller-coaster cart in 3D space. This data will later be manipulated to convert it into a form usable by the motion copmputer."""
+    def nl2_get_telemetry(self, packet: Packet) -> None:
+        """This function recieves values from NoLimits2 including linear velocity in the x, y, and z directions and the rotation quaternions for the roller-coaster cart in 3D space. This data will later be manipulated to convert it into a form usable by the motion copmputer. The packet object is updated with the new values."""
         self.nl2.send(get_telemetry)
         data = Answer.get_data(self.nl2.receive())
 
         if not isinstance(data, TelemetryData):
-             # TODO: Use logger to handle errors
              print("Error getting telemetry data")
              return
 
@@ -66,7 +67,7 @@ class NL2Fetch:
             if (LOGGING):
                 log_packet(packetData=packet)
 
-    def __del__(self):
-        # Terminate NL2 connection here
+    def __del__(self) -> None:
+        """Closes the connection to NoLimits2 when the application is terminated."""
         print("closing nl2 connection")
         self.nl2.close()
