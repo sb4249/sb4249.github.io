@@ -147,26 +147,32 @@ packet    </h1>
 </span><span id="L-36"><a href="#L-36"><span class="linenos">36</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">garbage</span> <span class="o">=</span> <span class="nb">bytearray</span><span class="p">([</span><span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">])</span>
 </span><span id="L-37"><a href="#L-37"><span class="linenos">37</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Buffer data at the end of the packet to allow it to be the correct size to be accepted by the motion computer. Must be exactly 8 bytes.&quot;&quot;&quot;</span>
 </span><span id="L-38"><a href="#L-38"><span class="linenos">38</span></a>
-</span><span id="L-39"><a href="#L-39"><span class="linenos">39</span></a>    <span class="k">def</span> <span class="nf">format_packet</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="L-40"><a href="#L-40"><span class="linenos">40</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;This function formats the packet that will be sent to the motion computer.&quot;&quot;&quot;</span>
-</span><span id="L-41"><a href="#L-41"><span class="linenos">41</span></a>        <span class="k">return</span> <span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;8s8slidddddddd8s&#39;</span><span class="p">,</span>
-</span><span id="L-42"><a href="#L-42"><span class="linenos">42</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="p">,</span>
-</span><span id="L-43"><a href="#L-43"><span class="linenos">43</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">fsTimer</span><span class="p">,</span>
-</span><span id="L-44"><a href="#L-44"><span class="linenos">44</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">tick</span><span class="p">,</span>
-</span><span id="L-45"><a href="#L-45"><span class="linenos">45</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">temp</span><span class="p">,</span>
-</span><span id="L-46"><a href="#L-46"><span class="linenos">46</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">x_lin_vel</span><span class="p">,</span>
-</span><span id="L-47"><a href="#L-47"><span class="linenos">47</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">y_lin_vel</span><span class="p">,</span>
-</span><span id="L-48"><a href="#L-48"><span class="linenos">48</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">z_lin_vel</span><span class="p">,</span>
-</span><span id="L-49"><a href="#L-49"><span class="linenos">49</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">pitch_ang_vel</span><span class="p">,</span>
-</span><span id="L-50"><a href="#L-50"><span class="linenos">50</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">roll_ang_vel</span><span class="p">,</span>
-</span><span id="L-51"><a href="#L-51"><span class="linenos">51</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">pitch_pos</span><span class="p">,</span>
-</span><span id="L-52"><a href="#L-52"><span class="linenos">52</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">roll_pos</span><span class="p">,</span>
-</span><span id="L-53"><a href="#L-53"><span class="linenos">53</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">altitude</span><span class="p">,</span>
-</span><span id="L-54"><a href="#L-54"><span class="linenos">54</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">garbage</span><span class="p">)</span>
-</span><span id="L-55"><a href="#L-55"><span class="linenos">55</span></a>
-</span><span id="L-56"><a href="#L-56"><span class="linenos">56</span></a>    <span class="k">def</span> <span class="nf">time_tick</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="L-57"><a href="#L-57"><span class="linenos">57</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;This function incriments a variable that allows the application to track which frame is currently being processed.&quot;&quot;&quot;</span>
-</span><span id="L-58"><a href="#L-58"><span class="linenos">58</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">tick</span> <span class="o">+=</span> <span class="mi">1</span>
+</span><span id="L-39"><a href="#L-39"><span class="linenos">39</span></a>    <span class="k">def</span> <span class="nf">format_packet</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">:</span>
+</span><span id="L-40"><a href="#L-40"><span class="linenos">40</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;This function formats the packet that will be sent to the motion computer.</span>
+</span><span id="L-41"><a href="#L-41"><span class="linenos">41</span></a><span class="sd">        </span>
+</span><span id="L-42"><a href="#L-42"><span class="linenos">42</span></a><span class="sd">        :return: A correctly constructed packet that can be sent to the motion computer.</span>
+</span><span id="L-43"><a href="#L-43"><span class="linenos">43</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="L-44"><a href="#L-44"><span class="linenos">44</span></a>        <span class="k">return</span> <span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;8s8slidddddddd8s&#39;</span><span class="p">,</span>
+</span><span id="L-45"><a href="#L-45"><span class="linenos">45</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="p">,</span>
+</span><span id="L-46"><a href="#L-46"><span class="linenos">46</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">fsTimer</span><span class="p">,</span>
+</span><span id="L-47"><a href="#L-47"><span class="linenos">47</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">tick</span><span class="p">,</span>
+</span><span id="L-48"><a href="#L-48"><span class="linenos">48</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">temp</span><span class="p">,</span>
+</span><span id="L-49"><a href="#L-49"><span class="linenos">49</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">x_lin_vel</span><span class="p">,</span>
+</span><span id="L-50"><a href="#L-50"><span class="linenos">50</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">y_lin_vel</span><span class="p">,</span>
+</span><span id="L-51"><a href="#L-51"><span class="linenos">51</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">z_lin_vel</span><span class="p">,</span>
+</span><span id="L-52"><a href="#L-52"><span class="linenos">52</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">pitch_ang_vel</span><span class="p">,</span>
+</span><span id="L-53"><a href="#L-53"><span class="linenos">53</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">roll_ang_vel</span><span class="p">,</span>
+</span><span id="L-54"><a href="#L-54"><span class="linenos">54</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">pitch_pos</span><span class="p">,</span>
+</span><span id="L-55"><a href="#L-55"><span class="linenos">55</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">roll_pos</span><span class="p">,</span>
+</span><span id="L-56"><a href="#L-56"><span class="linenos">56</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">altitude</span><span class="p">,</span>
+</span><span id="L-57"><a href="#L-57"><span class="linenos">57</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">garbage</span><span class="p">)</span>
+</span><span id="L-58"><a href="#L-58"><span class="linenos">58</span></a>
+</span><span id="L-59"><a href="#L-59"><span class="linenos">59</span></a>    <span class="k">def</span> <span class="nf">time_tick</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="L-60"><a href="#L-60"><span class="linenos">60</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;This function incriments a variable that allows the application to track which frame is currently being processed.</span>
+</span><span id="L-61"><a href="#L-61"><span class="linenos">61</span></a><span class="sd">        </span>
+</span><span id="L-62"><a href="#L-62"><span class="linenos">62</span></a><span class="sd">        :return: None.</span>
+</span><span id="L-63"><a href="#L-63"><span class="linenos">63</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="L-64"><a href="#L-64"><span class="linenos">64</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">tick</span> <span class="o">+=</span> <span class="mi">1</span>
 </span></pre></div>
 
 
@@ -215,26 +221,32 @@ packet    </h1>
 </span><span id="Packet-37"><a href="#Packet-37"><span class="linenos">37</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">garbage</span> <span class="o">=</span> <span class="nb">bytearray</span><span class="p">([</span><span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">])</span>
 </span><span id="Packet-38"><a href="#Packet-38"><span class="linenos">38</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Buffer data at the end of the packet to allow it to be the correct size to be accepted by the motion computer. Must be exactly 8 bytes.&quot;&quot;&quot;</span>
 </span><span id="Packet-39"><a href="#Packet-39"><span class="linenos">39</span></a>
-</span><span id="Packet-40"><a href="#Packet-40"><span class="linenos">40</span></a>    <span class="k">def</span> <span class="nf">format_packet</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="Packet-41"><a href="#Packet-41"><span class="linenos">41</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;This function formats the packet that will be sent to the motion computer.&quot;&quot;&quot;</span>
-</span><span id="Packet-42"><a href="#Packet-42"><span class="linenos">42</span></a>        <span class="k">return</span> <span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;8s8slidddddddd8s&#39;</span><span class="p">,</span>
-</span><span id="Packet-43"><a href="#Packet-43"><span class="linenos">43</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="p">,</span>
-</span><span id="Packet-44"><a href="#Packet-44"><span class="linenos">44</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">fsTimer</span><span class="p">,</span>
-</span><span id="Packet-45"><a href="#Packet-45"><span class="linenos">45</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">tick</span><span class="p">,</span>
-</span><span id="Packet-46"><a href="#Packet-46"><span class="linenos">46</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">temp</span><span class="p">,</span>
-</span><span id="Packet-47"><a href="#Packet-47"><span class="linenos">47</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">x_lin_vel</span><span class="p">,</span>
-</span><span id="Packet-48"><a href="#Packet-48"><span class="linenos">48</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">y_lin_vel</span><span class="p">,</span>
-</span><span id="Packet-49"><a href="#Packet-49"><span class="linenos">49</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">z_lin_vel</span><span class="p">,</span>
-</span><span id="Packet-50"><a href="#Packet-50"><span class="linenos">50</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">pitch_ang_vel</span><span class="p">,</span>
-</span><span id="Packet-51"><a href="#Packet-51"><span class="linenos">51</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">roll_ang_vel</span><span class="p">,</span>
-</span><span id="Packet-52"><a href="#Packet-52"><span class="linenos">52</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">pitch_pos</span><span class="p">,</span>
-</span><span id="Packet-53"><a href="#Packet-53"><span class="linenos">53</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">roll_pos</span><span class="p">,</span>
-</span><span id="Packet-54"><a href="#Packet-54"><span class="linenos">54</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">altitude</span><span class="p">,</span>
-</span><span id="Packet-55"><a href="#Packet-55"><span class="linenos">55</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">garbage</span><span class="p">)</span>
-</span><span id="Packet-56"><a href="#Packet-56"><span class="linenos">56</span></a>
-</span><span id="Packet-57"><a href="#Packet-57"><span class="linenos">57</span></a>    <span class="k">def</span> <span class="nf">time_tick</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="Packet-58"><a href="#Packet-58"><span class="linenos">58</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;This function incriments a variable that allows the application to track which frame is currently being processed.&quot;&quot;&quot;</span>
-</span><span id="Packet-59"><a href="#Packet-59"><span class="linenos">59</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">tick</span> <span class="o">+=</span> <span class="mi">1</span>
+</span><span id="Packet-40"><a href="#Packet-40"><span class="linenos">40</span></a>    <span class="k">def</span> <span class="nf">format_packet</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">:</span>
+</span><span id="Packet-41"><a href="#Packet-41"><span class="linenos">41</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;This function formats the packet that will be sent to the motion computer.</span>
+</span><span id="Packet-42"><a href="#Packet-42"><span class="linenos">42</span></a><span class="sd">        </span>
+</span><span id="Packet-43"><a href="#Packet-43"><span class="linenos">43</span></a><span class="sd">        :return: A correctly constructed packet that can be sent to the motion computer.</span>
+</span><span id="Packet-44"><a href="#Packet-44"><span class="linenos">44</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="Packet-45"><a href="#Packet-45"><span class="linenos">45</span></a>        <span class="k">return</span> <span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;8s8slidddddddd8s&#39;</span><span class="p">,</span>
+</span><span id="Packet-46"><a href="#Packet-46"><span class="linenos">46</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="p">,</span>
+</span><span id="Packet-47"><a href="#Packet-47"><span class="linenos">47</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">fsTimer</span><span class="p">,</span>
+</span><span id="Packet-48"><a href="#Packet-48"><span class="linenos">48</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">tick</span><span class="p">,</span>
+</span><span id="Packet-49"><a href="#Packet-49"><span class="linenos">49</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">temp</span><span class="p">,</span>
+</span><span id="Packet-50"><a href="#Packet-50"><span class="linenos">50</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">x_lin_vel</span><span class="p">,</span>
+</span><span id="Packet-51"><a href="#Packet-51"><span class="linenos">51</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">y_lin_vel</span><span class="p">,</span>
+</span><span id="Packet-52"><a href="#Packet-52"><span class="linenos">52</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">z_lin_vel</span><span class="p">,</span>
+</span><span id="Packet-53"><a href="#Packet-53"><span class="linenos">53</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">pitch_ang_vel</span><span class="p">,</span>
+</span><span id="Packet-54"><a href="#Packet-54"><span class="linenos">54</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">roll_ang_vel</span><span class="p">,</span>
+</span><span id="Packet-55"><a href="#Packet-55"><span class="linenos">55</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">pitch_pos</span><span class="p">,</span>
+</span><span id="Packet-56"><a href="#Packet-56"><span class="linenos">56</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">roll_pos</span><span class="p">,</span>
+</span><span id="Packet-57"><a href="#Packet-57"><span class="linenos">57</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">altitude</span><span class="p">,</span>
+</span><span id="Packet-58"><a href="#Packet-58"><span class="linenos">58</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">garbage</span><span class="p">)</span>
+</span><span id="Packet-59"><a href="#Packet-59"><span class="linenos">59</span></a>
+</span><span id="Packet-60"><a href="#Packet-60"><span class="linenos">60</span></a>    <span class="k">def</span> <span class="nf">time_tick</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="Packet-61"><a href="#Packet-61"><span class="linenos">61</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;This function incriments a variable that allows the application to track which frame is currently being processed.</span>
+</span><span id="Packet-62"><a href="#Packet-62"><span class="linenos">62</span></a><span class="sd">        </span>
+</span><span id="Packet-63"><a href="#Packet-63"><span class="linenos">63</span></a><span class="sd">        :return: None.</span>
+</span><span id="Packet-64"><a href="#Packet-64"><span class="linenos">64</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="Packet-65"><a href="#Packet-65"><span class="linenos">65</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">tick</span> <span class="o">+=</span> <span class="mi">1</span>
 </span></pre></div>
 
 
@@ -462,32 +474,41 @@ packet    </h1>
 <div class="attr function">
             
         <span class="def">def</span>
-        <span class="name">format_packet</span><span class="signature pdoc-code condensed">(<span class="param"><span class="bp">self</span></span><span class="return-annotation">):</span></span>
+        <span class="name">format_packet</span><span class="signature pdoc-code condensed">(<span class="param"><span class="bp">self</span></span><span class="return-annotation">) -> <span class="o">&lt;</span><span class="n">built</span><span class="o">-</span><span class="ow">in</span> <span class="n">function</span> <span class="n">pack</span><span class="o">&gt;</span>:</span></span>
 
                 <label class="view-source-button" for="Packet.format_packet-view-source"><span>View Source</span></label>
 
     </div>
     <a class="headerlink" href="#Packet.format_packet"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="Packet.format_packet-40"><a href="#Packet.format_packet-40"><span class="linenos">40</span></a>    <span class="k">def</span> <span class="nf">format_packet</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="Packet.format_packet-41"><a href="#Packet.format_packet-41"><span class="linenos">41</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;This function formats the packet that will be sent to the motion computer.&quot;&quot;&quot;</span>
-</span><span id="Packet.format_packet-42"><a href="#Packet.format_packet-42"><span class="linenos">42</span></a>        <span class="k">return</span> <span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;8s8slidddddddd8s&#39;</span><span class="p">,</span>
-</span><span id="Packet.format_packet-43"><a href="#Packet.format_packet-43"><span class="linenos">43</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="p">,</span>
-</span><span id="Packet.format_packet-44"><a href="#Packet.format_packet-44"><span class="linenos">44</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">fsTimer</span><span class="p">,</span>
-</span><span id="Packet.format_packet-45"><a href="#Packet.format_packet-45"><span class="linenos">45</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">tick</span><span class="p">,</span>
-</span><span id="Packet.format_packet-46"><a href="#Packet.format_packet-46"><span class="linenos">46</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">temp</span><span class="p">,</span>
-</span><span id="Packet.format_packet-47"><a href="#Packet.format_packet-47"><span class="linenos">47</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">x_lin_vel</span><span class="p">,</span>
-</span><span id="Packet.format_packet-48"><a href="#Packet.format_packet-48"><span class="linenos">48</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">y_lin_vel</span><span class="p">,</span>
-</span><span id="Packet.format_packet-49"><a href="#Packet.format_packet-49"><span class="linenos">49</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">z_lin_vel</span><span class="p">,</span>
-</span><span id="Packet.format_packet-50"><a href="#Packet.format_packet-50"><span class="linenos">50</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">pitch_ang_vel</span><span class="p">,</span>
-</span><span id="Packet.format_packet-51"><a href="#Packet.format_packet-51"><span class="linenos">51</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">roll_ang_vel</span><span class="p">,</span>
-</span><span id="Packet.format_packet-52"><a href="#Packet.format_packet-52"><span class="linenos">52</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">pitch_pos</span><span class="p">,</span>
-</span><span id="Packet.format_packet-53"><a href="#Packet.format_packet-53"><span class="linenos">53</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">roll_pos</span><span class="p">,</span>
-</span><span id="Packet.format_packet-54"><a href="#Packet.format_packet-54"><span class="linenos">54</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">altitude</span><span class="p">,</span>
-</span><span id="Packet.format_packet-55"><a href="#Packet.format_packet-55"><span class="linenos">55</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">garbage</span><span class="p">)</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="Packet.format_packet-40"><a href="#Packet.format_packet-40"><span class="linenos">40</span></a>    <span class="k">def</span> <span class="nf">format_packet</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">:</span>
+</span><span id="Packet.format_packet-41"><a href="#Packet.format_packet-41"><span class="linenos">41</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;This function formats the packet that will be sent to the motion computer.</span>
+</span><span id="Packet.format_packet-42"><a href="#Packet.format_packet-42"><span class="linenos">42</span></a><span class="sd">        </span>
+</span><span id="Packet.format_packet-43"><a href="#Packet.format_packet-43"><span class="linenos">43</span></a><span class="sd">        :return: A correctly constructed packet that can be sent to the motion computer.</span>
+</span><span id="Packet.format_packet-44"><a href="#Packet.format_packet-44"><span class="linenos">44</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="Packet.format_packet-45"><a href="#Packet.format_packet-45"><span class="linenos">45</span></a>        <span class="k">return</span> <span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;8s8slidddddddd8s&#39;</span><span class="p">,</span>
+</span><span id="Packet.format_packet-46"><a href="#Packet.format_packet-46"><span class="linenos">46</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="p">,</span>
+</span><span id="Packet.format_packet-47"><a href="#Packet.format_packet-47"><span class="linenos">47</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">fsTimer</span><span class="p">,</span>
+</span><span id="Packet.format_packet-48"><a href="#Packet.format_packet-48"><span class="linenos">48</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">tick</span><span class="p">,</span>
+</span><span id="Packet.format_packet-49"><a href="#Packet.format_packet-49"><span class="linenos">49</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">temp</span><span class="p">,</span>
+</span><span id="Packet.format_packet-50"><a href="#Packet.format_packet-50"><span class="linenos">50</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">x_lin_vel</span><span class="p">,</span>
+</span><span id="Packet.format_packet-51"><a href="#Packet.format_packet-51"><span class="linenos">51</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">y_lin_vel</span><span class="p">,</span>
+</span><span id="Packet.format_packet-52"><a href="#Packet.format_packet-52"><span class="linenos">52</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">z_lin_vel</span><span class="p">,</span>
+</span><span id="Packet.format_packet-53"><a href="#Packet.format_packet-53"><span class="linenos">53</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">pitch_ang_vel</span><span class="p">,</span>
+</span><span id="Packet.format_packet-54"><a href="#Packet.format_packet-54"><span class="linenos">54</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">roll_ang_vel</span><span class="p">,</span>
+</span><span id="Packet.format_packet-55"><a href="#Packet.format_packet-55"><span class="linenos">55</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">pitch_pos</span><span class="p">,</span>
+</span><span id="Packet.format_packet-56"><a href="#Packet.format_packet-56"><span class="linenos">56</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">roll_pos</span><span class="p">,</span>
+</span><span id="Packet.format_packet-57"><a href="#Packet.format_packet-57"><span class="linenos">57</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">altitude</span><span class="p">,</span>
+</span><span id="Packet.format_packet-58"><a href="#Packet.format_packet-58"><span class="linenos">58</span></a>                            <span class="bp">self</span><span class="o">.</span><span class="n">garbage</span><span class="p">)</span>
 </span></pre></div>
 
 
             <div class="docstring"><p>This function formats the packet that will be sent to the motion computer.</p>
+
+<h6 id="returns">Returns</h6>
+
+<blockquote>
+  <p>A correctly constructed packet that can be sent to the motion computer.</p>
+</blockquote>
 </div>
 
 
@@ -497,19 +518,28 @@ packet    </h1>
 <div class="attr function">
             
         <span class="def">def</span>
-        <span class="name">time_tick</span><span class="signature pdoc-code condensed">(<span class="param"><span class="bp">self</span></span><span class="return-annotation">):</span></span>
+        <span class="name">time_tick</span><span class="signature pdoc-code condensed">(<span class="param"><span class="bp">self</span></span><span class="return-annotation">) -> <span class="kc">None</span>:</span></span>
 
                 <label class="view-source-button" for="Packet.time_tick-view-source"><span>View Source</span></label>
 
     </div>
     <a class="headerlink" href="#Packet.time_tick"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="Packet.time_tick-57"><a href="#Packet.time_tick-57"><span class="linenos">57</span></a>    <span class="k">def</span> <span class="nf">time_tick</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="Packet.time_tick-58"><a href="#Packet.time_tick-58"><span class="linenos">58</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;This function incriments a variable that allows the application to track which frame is currently being processed.&quot;&quot;&quot;</span>
-</span><span id="Packet.time_tick-59"><a href="#Packet.time_tick-59"><span class="linenos">59</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">tick</span> <span class="o">+=</span> <span class="mi">1</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="Packet.time_tick-60"><a href="#Packet.time_tick-60"><span class="linenos">60</span></a>    <span class="k">def</span> <span class="nf">time_tick</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="Packet.time_tick-61"><a href="#Packet.time_tick-61"><span class="linenos">61</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;This function incriments a variable that allows the application to track which frame is currently being processed.</span>
+</span><span id="Packet.time_tick-62"><a href="#Packet.time_tick-62"><span class="linenos">62</span></a><span class="sd">        </span>
+</span><span id="Packet.time_tick-63"><a href="#Packet.time_tick-63"><span class="linenos">63</span></a><span class="sd">        :return: None.</span>
+</span><span id="Packet.time_tick-64"><a href="#Packet.time_tick-64"><span class="linenos">64</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="Packet.time_tick-65"><a href="#Packet.time_tick-65"><span class="linenos">65</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">tick</span> <span class="o">+=</span> <span class="mi">1</span>
 </span></pre></div>
 
 
             <div class="docstring"><p>This function incriments a variable that allows the application to track which frame is currently being processed.</p>
+
+<h6 id="returns">Returns</h6>
+
+<blockquote>
+  <p>None.</p>
+</blockquote>
 </div>
 
 

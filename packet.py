@@ -36,8 +36,11 @@ class Packet:
         self.garbage = bytearray([0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00])
         """Buffer data at the end of the packet to allow it to be the correct size to be accepted by the motion computer. Must be exactly 8 bytes."""
 
-    def format_packet(self):
-        """This function formats the packet that will be sent to the motion computer."""
+    def format_packet(self) -> struct.pack:
+        """This function formats the packet that will be sent to the motion computer.
+        
+        :return: A correctly constructed packet that can be sent to the motion computer.
+        """
         return struct.pack('8s8slidddddddd8s',
                             self.header,
                             self.fsTimer,
@@ -53,7 +56,10 @@ class Packet:
                             self.altitude,
                             self.garbage)
 
-    def time_tick(self):
-        """This function incriments a variable that allows the application to track which frame is currently being processed."""
+    def time_tick(self) -> None:
+        """This function incriments a variable that allows the application to track which frame is currently being processed.
+        
+        :return: None.
+        """
         self.tick += 1
 
