@@ -9,31 +9,31 @@ class Packet:
     # Default values are neutral machine position
     def __init__(self, x_lin_vel=0.0, y_lin_vel=0.0, z_lin_vel=0.0, pitch_pos=0.0, roll_pos=0.0):
         """This function initializes variables that will be necessary to construct a properly formatted packet."""
-        self.header = bytearray([0x00, 0x02, 0x60, 0x00, 0x00, 0x00, 0x00, 0x00])
+        self.header: bytearray = bytearray([0x00, 0x02, 0x60, 0x00, 0x00, 0x00, 0x00, 0x00])
         """A header for the packets that will be sent. Mostly buffer bytes to allow packet to be correct size."""
-        self.fsTimer = bytearray([0x00, 0x00, 0x00, 0xC0, 0x47, 0x61, 0x24, 0x40])
+        self.fsTimer: bytearray = bytearray([0x00, 0x00, 0x00, 0xC0, 0x47, 0x61, 0x24, 0x40])
         """Information necessary for the motion computer's timer."""
-        self.tick = 0
+        self.tick: int = 0
         """The frame that is currently being processed"""
-        self.temp = 0 #unused
+        self.temp: int = 0 #unused
         """An unused variable in the motion computer."""
-        self.x_lin_vel = x_lin_vel
+        self.x_lin_vel: int = x_lin_vel
         """Linear velocity in the x direction for a particular frame."""
-        self.y_lin_vel = y_lin_vel
+        self.y_lin_vel: int = y_lin_vel
         """Linear velocity in the y direction for a particular frame."""
-        self.z_lin_vel = z_lin_vel
+        self.z_lin_vel: int = z_lin_vel
         """Linear velocity in the z direction for a particular frame."""
-        self.pitch_ang_vel = 0 #unused
+        self.pitch_ang_vel: int = 0 #unused
         """An unused variable in the motion computer."""
-        self.roll_ang_vel = 0 #unused
+        self.roll_ang_vel: int = 0 #unused
         """An unused variable in the motion computer."""
-        self.pitch_pos = pitch_pos
+        self.pitch_pos: int = pitch_pos
         """The pitch angle of the roller-coaster cart for a particular frame."""
-        self.roll_pos = roll_pos
+        self.roll_pos: int = roll_pos
         """The roll angle of the roller-coaster cart for a particular frame."""
-        self.altitude = 0 #unused
+        self.altitude: int = 0 #unused
         """An unused variable in the motion computer."""
-        self.garbage = bytearray([0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00])
+        self.garbage: bytearray = bytearray([0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00])
         """Buffer data at the end of the packet to allow it to be the correct size to be accepted by the motion computer. Must be exactly 8 bytes."""
 
     def format_packet(self) -> struct.pack:
