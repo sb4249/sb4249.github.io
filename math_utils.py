@@ -5,6 +5,8 @@ safetyCounter = 0
 safetyMode = False
 
 def quaternion_to_pitch_and_roll(x, y, z, w):
+    global lastPitch, safetyCounter, safetyMode
+
     quaternion = Rotation.from_quat([x, y, z, w])
     eulerAngles = quaternion.as_euler('xzy', degrees=True)
 
