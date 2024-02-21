@@ -12,18 +12,17 @@ def quaternion_to_pitch_and_roll(x, y, z, w):
 
     pitch, roll, _ = euler_angles
     
-    if (pitch > 0 and pitch-last_pitch >= 0.5): #Will have to be changed with testing. "0.5" should be replaced with the large single-frame delta seen in the test where an interlock occurred.
+    if (pitch > 0 and pitch-last_pitch >= 0.5): # Will have to be changed with testing. "0.5" should be replaced with the large single-frame delta seen in the test where an interlock occurred.
         safety_counter += 1
     elif (pitch <= 0):
         safety_mode = False
         safety_counter = 0
     
-    if (safety_counter >= 5): #Will also have to be changed in testing. Can modify the sensitivity of safety mode.
+    if (safety_counter >= 5): # Will also have to be changed in testing. Can modify the sensitivity of safety mode.
         safety_mode = True
         
-    if (safety_mode):
-        if (pitch > 29.4): #Final thing that may need tweaking. 29.4 is the maximum angle achievable by the hardware, but orchestrated motion may make this more complicated.
-            pitch = pitch * 0.9
+    if (safety_mode and pitch > 29.4): # Final thing that may need tweaking. 29.4 is the maximum angle achievable by the hardware, but orchestrated motion may make this more complicated.
+        pitch = pitch * 0.9
 
     last_pitch = pitch
     return pitch, roll
