@@ -50,8 +50,8 @@ def calculate_velocity(lastPos, currentPos, timeDiff=0.03333333333):
     pos1 = tuple(lastPos)
     pos2 = tuple(currentPos)
 
-    vx = (pos2[0] - pos1[0]) / time_diff
-    vy = (pos2[1] - pos1[1]) / time_diff
-    vz = (pos2[2] - pos1[2]) / time_diff
+    vx = (pos2[0] - pos1[0]) / timeDiff
+    vy = (pos2[1] - pos1[1]) / timeDiff
+    vz = (pos2[2] - pos1[2]) / timeDiff
     
     return vx, vy, vz
