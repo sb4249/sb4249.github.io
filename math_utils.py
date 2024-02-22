@@ -2,8 +2,12 @@
 
 from scipy.spatial.transform import Rotation
 
+last_pitch = 0
+safety_counter = 0
+safety_mode = False
+
 def quaternion_to_pitch_and_roll(x, y, z, w):
-    """This function converts quaternions from NoLimits2 representing the rotation of the roller-coaster cart in 3D space (x, y, z, and w) into pitch and roll angles in degrees. It does this with an external library called scipy.
+  """This function converts quaternions from NoLimits2 representing the rotation of the roller-coaster cart in 3D space (x, y, z, and w) into pitch and roll angles in degrees. It does this with an external library called scipy.
     
     :param x: Rotation quaternion x.  
     :param y: Rotation quaternion y.  
@@ -12,14 +16,26 @@ def quaternion_to_pitch_and_roll(x, y, z, w):
     
     :return: The pitch and roll angles of the roller-coaster cart.
     """
+    global last_pitch, safety_counter, safety_mode
+
     quaternion = Rotation.from_quat([x, y, z, w])
-    eulerAngles = quaternion.as_euler('xzy', degrees=True)
+    euler_angles = quaternion.as_euler('xzy', degrees=True)
 
-    pitch, roll, _ = eulerAngles
+    pitch, roll, _ = euler_angles
+    
+    if (pitch > 0 and pitch-last_pitch >= 0.5): # Will have to be changed with testing. "0.5" should be replaced with the large single-frame delta seen in the test where an interlock occurred.
+        safety_counter += 1
+    elif (pitch <= 0):
+        safety_mode = False
+        safety_counter = 0
+    
+    if (safety_counter >= 5): # Will also have to be changed in testing. Can modify the sensitivity of safety mode.
+        safety_mode = True
+        
+    if (safety_mode and pitch > 29.4): # Final thing that may need tweaking. 29.4 is the maximum angle achievable by the hardware, but orchestrated motion may make this more complicated.
+        pitch = pitch * 0.9
 
-    # pitch = max(-15.5, min(pitch, 33.75))
-    # roll = max(-40, min(roll, 40))
-
+    last_pitch = pitch
     return pitch, roll
 
 def calculate_velocity(lastPos, currentPos, timeDiff=0.03333333333):
@@ -34,8 +50,8 @@ def calculate_velocity(lastPos, currentPos, timeDiff=0.03333333333):
     pos1 = tuple(lastPos)
     pos2 = tuple(currentPos)
 
-    vx = (pos2[0] - pos1[0]) / timeDiff
-    vy = (pos2[1] - pos1[1]) / timeDiff
-    vz = (pos2[2] - pos1[2]) / timeDiff
-
+    vx = (pos2[0] - pos1[0]) / time_diff
+    vy = (pos2[1] - pos1[1]) / time_diff
+    vz = (pos2[2] - pos1[2]) / time_diff
+    
     return vx, vy, vz
