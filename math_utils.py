@@ -38,7 +38,7 @@ def quaternion_to_pitch_and_roll(x, y, z, w):
     last_pitch = pitch
     return pitch, roll
 
-def calculate_velocity(lastPos, currentPos, timeDiff=0.03333333333):
+def calculate_velocity(last_pos, current_pos, time_diff=0.03333333333):
     """This function calculates the linear velocity in the x, y, and z directions for a given frame. It does this by taking the differnece in x, y, and z positions between frames and divides that by the time ellapsed over the frame (or 1/FramesPerSecond).
     
     :param lastPos: A tuple containin the position of the roller-coaster cart last frame.  
@@ -47,11 +47,11 @@ def calculate_velocity(lastPos, currentPos, timeDiff=0.03333333333):
     
     :return: The linear velocity of the cart in the x, y, and z directions.
     """
-    pos1 = tuple(lastPos)
-    pos2 = tuple(currentPos)
+    pos1 = tuple(last_pos)
+    pos2 = tuple(current_pos)
 
-    vx = (pos2[0] - pos1[0]) / timeDiff
-    vy = (pos2[1] - pos1[1]) / timeDiff
-    vz = (pos2[2] - pos1[2]) / timeDiff
+    vx = (pos2[0] - pos1[0]) / time_diff
+    vy = (pos2[1] - pos1[1]) / time_diff
+    vz = (pos2[2] - pos1[2]) / time_diff
     
     return vx, vy, vz
