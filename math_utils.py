@@ -7,7 +7,7 @@ safety_counter = 0
 safety_mode = False
 
 def quaternion_to_pitch_and_roll(x, y, z, w):
-  """This function converts quaternions from NoLimits2 representing the rotation of the roller-coaster cart in 3D space (x, y, z, and w) into pitch and roll angles in degrees. It does this with an external library called scipy.
+    """This function converts quaternions from NoLimits2 representing the rotation of the roller-coaster cart in 3D space (x, y, z, and w) into pitch and roll angles in degrees. It does this with an external library called scipy.
     
     :param x: Rotation quaternion x.  
     :param y: Rotation quaternion y.  
@@ -16,8 +16,8 @@ def quaternion_to_pitch_and_roll(x, y, z, w):
     
     :return: The pitch and roll angles of the roller-coaster cart.
     """
-    global last_pitch, safety_counter, safety_mode
 
+    global last_pitch, safety_counter, safety_mode
     quaternion = Rotation.from_quat([x, y, z, w])
     euler_angles = quaternion.as_euler('xzy', degrees=True)
 
