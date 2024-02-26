@@ -8,6 +8,8 @@ safety_mode = False
 
 def quaternion_to_pitch_and_roll(x, y, z, w):
     """This function converts quaternions from NoLimits2 representing the rotation of the roller-coaster cart in 3D space (x, y, z, and w) into pitch and roll angles in degrees. It does this with an external library called scipy.
+       This function also attempts to fix an issue where the motion simulator would pitch too quickly and trigger a hardware interlock. When successive large single-frame deltas in pitch are observed, "safety mode" is activiated to reduce pitch of the ride
+       until the climb is completed.
     
     :param x: Rotation quaternion x.  
     :param y: Rotation quaternion y.  
