@@ -20,7 +20,7 @@ jobs:
         with:
           python-version: '3.12'
 
-      - run: pip install pdoc scipy
+      - run: pip install pdoc
       - run: make doc
 
       - uses: actions/upload-pages-artifact@v3
