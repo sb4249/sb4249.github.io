@@ -22,6 +22,8 @@ class NL2Fetch:
         self.nl2.connect()
         self.last_pos: Tuple[int, int, int] = None
         """Initializes a variable to track the last position of the roller-coaster cart. This will be used to calculate linear velocity over each frame of the simulation. Each value in the tuple represents the x, y, and z position of the roller-coaster cart."""
+        self.play_mode = False
+        """Initializes a variable to track the if the game is still running. This is used to determine if the game was running but has exited."""
 
 
     def nl2_get_telemetry(self, packet: Packet) -> None:
@@ -47,6 +49,7 @@ class NL2Fetch:
             # if this is the first frame being received,
             # set the last position to the current position
             # for purposes of calculating velocity
+            self.play_mode = True
             self.last_pos = self.last_pos or (data.position_x, data.position_y, data.position_z)
 
             velocity = math_utils.calculate_velocity(
@@ -71,6 +74,14 @@ class NL2Fetch:
 
             if (LOGGING):
                 log_packet(packetData=packet)
+
+        elif self.play_mode == True:
+            packet.x_lin_vel = 0.0
+            packet.y_lin_vel = 0.0
+            packet.z_lin_vel = 0.0
+            packet.pitch_pos = 0.0
+            packet.roll_pos = 0.0
+            self.last_pos = None
 
     def __del__(self) -> None:
         """Closes the connection to NoLimits2 when the application is terminated."""
