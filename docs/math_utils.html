@@ -24,6 +24,7 @@
                 Module Index
             </a>
 
+            <img src="https://github.com/sb4249/sb4249.github.io/raw/main/images/logo.webp" class="logo" alt="project logo"/>
 
             <input type="search" placeholder="Search..." role="searchbox" aria-label="search"
                    pattern=".+" required>
@@ -32,6 +33,15 @@
 
             <h2>API Documentation</h2>
                 <ul class="memberlist">
+            <li>
+                    <a class="variable" href="#last_pitch">last_pitch</a>
+            </li>
+            <li>
+                    <a class="variable" href="#safety_counter">safety_counter</a>
+            </li>
+            <li>
+                    <a class="variable" href="#safety_mode">safety_mode</a>
+            </li>
             <li>
                     <a class="function" href="#quaternion_to_pitch_and_roll">quaternion_to_pitch_and_roll</a>
             </li>
@@ -65,47 +75,101 @@ math_utils    </h1>
 </span><span id="L-2"><a href="#L-2"><span class="linenos"> 2</span></a>
 </span><span id="L-3"><a href="#L-3"><span class="linenos"> 3</span></a><span class="kn">from</span> <span class="nn">scipy.spatial.transform</span> <span class="kn">import</span> <span class="n">Rotation</span>
 </span><span id="L-4"><a href="#L-4"><span class="linenos"> 4</span></a>
-</span><span id="L-5"><a href="#L-5"><span class="linenos"> 5</span></a><span class="k">def</span> <span class="nf">quaternion_to_pitch_and_roll</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">w</span><span class="p">):</span>
-</span><span id="L-6"><a href="#L-6"><span class="linenos"> 6</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;This function converts quaternions from NoLimits2 representing the rotation of the roller-coaster cart in 3D space (x, y, z, and w) into pitch and roll angles in degrees. It does this with an external library called scipy.</span>
-</span><span id="L-7"><a href="#L-7"><span class="linenos"> 7</span></a><span class="sd">    </span>
-</span><span id="L-8"><a href="#L-8"><span class="linenos"> 8</span></a><span class="sd">    :param x: Rotation quaternion x.  </span>
-</span><span id="L-9"><a href="#L-9"><span class="linenos"> 9</span></a><span class="sd">    :param y: Rotation quaternion y.  </span>
-</span><span id="L-10"><a href="#L-10"><span class="linenos">10</span></a><span class="sd">    :param z: Rotation quaternion z. </span>
-</span><span id="L-11"><a href="#L-11"><span class="linenos">11</span></a><span class="sd">    :param w: Rotation quaternion w.  </span>
-</span><span id="L-12"><a href="#L-12"><span class="linenos">12</span></a><span class="sd">    </span>
-</span><span id="L-13"><a href="#L-13"><span class="linenos">13</span></a><span class="sd">    :return: The pitch and roll angles of the roller-coaster cart.</span>
-</span><span id="L-14"><a href="#L-14"><span class="linenos">14</span></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="L-15"><a href="#L-15"><span class="linenos">15</span></a>    <span class="n">quaternion</span> <span class="o">=</span> <span class="n">Rotation</span><span class="o">.</span><span class="n">from_quat</span><span class="p">([</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">w</span><span class="p">])</span>
-</span><span id="L-16"><a href="#L-16"><span class="linenos">16</span></a>    <span class="n">eulerAngles</span> <span class="o">=</span> <span class="n">quaternion</span><span class="o">.</span><span class="n">as_euler</span><span class="p">(</span><span class="s1">&#39;xzy&#39;</span><span class="p">,</span> <span class="n">degrees</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-</span><span id="L-17"><a href="#L-17"><span class="linenos">17</span></a>
-</span><span id="L-18"><a href="#L-18"><span class="linenos">18</span></a>    <span class="n">pitch</span><span class="p">,</span> <span class="n">roll</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">eulerAngles</span>
-</span><span id="L-19"><a href="#L-19"><span class="linenos">19</span></a>
-</span><span id="L-20"><a href="#L-20"><span class="linenos">20</span></a>    <span class="c1"># pitch = max(-15.5, min(pitch, 33.75))</span>
-</span><span id="L-21"><a href="#L-21"><span class="linenos">21</span></a>    <span class="c1"># roll = max(-40, min(roll, 40))</span>
-</span><span id="L-22"><a href="#L-22"><span class="linenos">22</span></a>
-</span><span id="L-23"><a href="#L-23"><span class="linenos">23</span></a>    <span class="k">return</span> <span class="n">pitch</span><span class="p">,</span> <span class="n">roll</span>
-</span><span id="L-24"><a href="#L-24"><span class="linenos">24</span></a>
-</span><span id="L-25"><a href="#L-25"><span class="linenos">25</span></a><span class="k">def</span> <span class="nf">calculate_velocity</span><span class="p">(</span><span class="n">lastPos</span><span class="p">,</span> <span class="n">currentPos</span><span class="p">,</span> <span class="n">timeDiff</span><span class="o">=</span><span class="mf">0.03333333333</span><span class="p">):</span>
-</span><span id="L-26"><a href="#L-26"><span class="linenos">26</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;This function calculates the linear velocity in the x, y, and z directions for a given frame. It does this by taking the differnece in x, y, and z positions between frames and divides that by the time ellapsed over the frame (or 1/FramesPerSecond).</span>
-</span><span id="L-27"><a href="#L-27"><span class="linenos">27</span></a><span class="sd">    </span>
-</span><span id="L-28"><a href="#L-28"><span class="linenos">28</span></a><span class="sd">    :param lastPos: A tuple containin the position of the roller-coaster cart last frame.  </span>
-</span><span id="L-29"><a href="#L-29"><span class="linenos">29</span></a><span class="sd">    :param currentPos: A tuple containing the position of the roller-coaster cart this frame.  </span>
-</span><span id="L-30"><a href="#L-30"><span class="linenos">30</span></a><span class="sd">    :param timeDiff: The amount of time in seconds ellapsed over each frame. Dependent on frame rate data is being sent at.  </span>
-</span><span id="L-31"><a href="#L-31"><span class="linenos">31</span></a><span class="sd">    </span>
-</span><span id="L-32"><a href="#L-32"><span class="linenos">32</span></a><span class="sd">    :return: The linear velocity of the cart in the x, y, and z directions.</span>
-</span><span id="L-33"><a href="#L-33"><span class="linenos">33</span></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="L-34"><a href="#L-34"><span class="linenos">34</span></a>    <span class="n">pos1</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">lastPos</span><span class="p">)</span>
-</span><span id="L-35"><a href="#L-35"><span class="linenos">35</span></a>    <span class="n">pos2</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">currentPos</span><span class="p">)</span>
-</span><span id="L-36"><a href="#L-36"><span class="linenos">36</span></a>
-</span><span id="L-37"><a href="#L-37"><span class="linenos">37</span></a>    <span class="n">vx</span> <span class="o">=</span> <span class="p">(</span><span class="n">pos2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">pos1</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="n">timeDiff</span>
-</span><span id="L-38"><a href="#L-38"><span class="linenos">38</span></a>    <span class="n">vy</span> <span class="o">=</span> <span class="p">(</span><span class="n">pos2</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">pos1</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="n">timeDiff</span>
-</span><span id="L-39"><a href="#L-39"><span class="linenos">39</span></a>    <span class="n">vz</span> <span class="o">=</span> <span class="p">(</span><span class="n">pos2</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="n">pos1</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="o">/</span> <span class="n">timeDiff</span>
-</span><span id="L-40"><a href="#L-40"><span class="linenos">40</span></a>
-</span><span id="L-41"><a href="#L-41"><span class="linenos">41</span></a>    <span class="k">return</span> <span class="n">vx</span><span class="p">,</span> <span class="n">vy</span><span class="p">,</span> <span class="n">vz</span>
+</span><span id="L-5"><a href="#L-5"><span class="linenos"> 5</span></a><span class="n">last_pitch</span> <span class="o">=</span> <span class="mi">0</span>
+</span><span id="L-6"><a href="#L-6"><span class="linenos"> 6</span></a><span class="n">safety_counter</span> <span class="o">=</span> <span class="mi">0</span>
+</span><span id="L-7"><a href="#L-7"><span class="linenos"> 7</span></a><span class="n">safety_mode</span> <span class="o">=</span> <span class="kc">False</span>
+</span><span id="L-8"><a href="#L-8"><span class="linenos"> 8</span></a>
+</span><span id="L-9"><a href="#L-9"><span class="linenos"> 9</span></a><span class="k">def</span> <span class="nf">quaternion_to_pitch_and_roll</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">w</span><span class="p">):</span>
+</span><span id="L-10"><a href="#L-10"><span class="linenos">10</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;This function converts quaternions from NoLimits2 representing the rotation of the roller-coaster cart in 3D space (x, y, z, and w) into pitch and roll angles in degrees. It does this with an external library called scipy.</span>
+</span><span id="L-11"><a href="#L-11"><span class="linenos">11</span></a><span class="sd">       This function also attempts to fix an issue where the motion simulator would pitch too quickly and trigger a hardware interlock. When successive large single-frame deltas in pitch are observed, &quot;safety mode&quot; is activiated to reduce pitch of the ride</span>
+</span><span id="L-12"><a href="#L-12"><span class="linenos">12</span></a><span class="sd">       until the climb is completed.</span>
+</span><span id="L-13"><a href="#L-13"><span class="linenos">13</span></a><span class="sd">    </span>
+</span><span id="L-14"><a href="#L-14"><span class="linenos">14</span></a><span class="sd">    :param x: Rotation quaternion x.  </span>
+</span><span id="L-15"><a href="#L-15"><span class="linenos">15</span></a><span class="sd">    :param y: Rotation quaternion y.  </span>
+</span><span id="L-16"><a href="#L-16"><span class="linenos">16</span></a><span class="sd">    :param z: Rotation quaternion z. </span>
+</span><span id="L-17"><a href="#L-17"><span class="linenos">17</span></a><span class="sd">    :param w: Rotation quaternion w.  </span>
+</span><span id="L-18"><a href="#L-18"><span class="linenos">18</span></a><span class="sd">    </span>
+</span><span id="L-19"><a href="#L-19"><span class="linenos">19</span></a><span class="sd">    :return: The pitch and roll angles of the roller-coaster cart.</span>
+</span><span id="L-20"><a href="#L-20"><span class="linenos">20</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="L-21"><a href="#L-21"><span class="linenos">21</span></a>
+</span><span id="L-22"><a href="#L-22"><span class="linenos">22</span></a>    <span class="k">global</span> <span class="n">last_pitch</span><span class="p">,</span> <span class="n">safety_counter</span><span class="p">,</span> <span class="n">safety_mode</span>
+</span><span id="L-23"><a href="#L-23"><span class="linenos">23</span></a>    <span class="n">quaternion</span> <span class="o">=</span> <span class="n">Rotation</span><span class="o">.</span><span class="n">from_quat</span><span class="p">([</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">w</span><span class="p">])</span>
+</span><span id="L-24"><a href="#L-24"><span class="linenos">24</span></a>    <span class="n">euler_angles</span> <span class="o">=</span> <span class="n">quaternion</span><span class="o">.</span><span class="n">as_euler</span><span class="p">(</span><span class="s1">&#39;xzy&#39;</span><span class="p">,</span> <span class="n">degrees</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="L-25"><a href="#L-25"><span class="linenos">25</span></a>
+</span><span id="L-26"><a href="#L-26"><span class="linenos">26</span></a>    <span class="n">pitch</span><span class="p">,</span> <span class="n">roll</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">euler_angles</span>
+</span><span id="L-27"><a href="#L-27"><span class="linenos">27</span></a>    
+</span><span id="L-28"><a href="#L-28"><span class="linenos">28</span></a>    <span class="k">if</span> <span class="p">(</span><span class="n">pitch</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">pitch</span><span class="o">-</span><span class="n">last_pitch</span> <span class="o">&gt;=</span> <span class="mf">0.5</span><span class="p">):</span> <span class="c1"># Will have to be changed with testing. &quot;0.5&quot; should be replaced with the large single-frame delta seen in the test where an interlock occurred.</span>
+</span><span id="L-29"><a href="#L-29"><span class="linenos">29</span></a>        <span class="n">safety_counter</span> <span class="o">+=</span> <span class="mi">1</span>
+</span><span id="L-30"><a href="#L-30"><span class="linenos">30</span></a>    <span class="k">elif</span> <span class="p">(</span><span class="n">pitch</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">):</span>
+</span><span id="L-31"><a href="#L-31"><span class="linenos">31</span></a>        <span class="n">safety_mode</span> <span class="o">=</span> <span class="kc">False</span>
+</span><span id="L-32"><a href="#L-32"><span class="linenos">32</span></a>        <span class="n">safety_counter</span> <span class="o">=</span> <span class="mi">0</span>
+</span><span id="L-33"><a href="#L-33"><span class="linenos">33</span></a>    
+</span><span id="L-34"><a href="#L-34"><span class="linenos">34</span></a>    <span class="k">if</span> <span class="p">(</span><span class="n">safety_counter</span> <span class="o">&gt;=</span> <span class="mi">5</span><span class="p">):</span> <span class="c1"># Will also have to be changed in testing. Can modify the sensitivity of safety mode.</span>
+</span><span id="L-35"><a href="#L-35"><span class="linenos">35</span></a>        <span class="n">safety_mode</span> <span class="o">=</span> <span class="kc">True</span>
+</span><span id="L-36"><a href="#L-36"><span class="linenos">36</span></a>        
+</span><span id="L-37"><a href="#L-37"><span class="linenos">37</span></a>    <span class="k">if</span> <span class="p">(</span><span class="n">safety_mode</span> <span class="ow">and</span> <span class="n">pitch</span> <span class="o">&gt;</span> <span class="mf">29.4</span><span class="p">):</span> <span class="c1"># Final thing that may need tweaking. 29.4 is the maximum angle achievable by the hardware, but orchestrated motion may make this more complicated.</span>
+</span><span id="L-38"><a href="#L-38"><span class="linenos">38</span></a>        <span class="n">pitch</span> <span class="o">=</span> <span class="n">pitch</span> <span class="o">*</span> <span class="mf">0.9</span>
+</span><span id="L-39"><a href="#L-39"><span class="linenos">39</span></a>
+</span><span id="L-40"><a href="#L-40"><span class="linenos">40</span></a>    <span class="n">last_pitch</span> <span class="o">=</span> <span class="n">pitch</span>
+</span><span id="L-41"><a href="#L-41"><span class="linenos">41</span></a>    <span class="k">return</span> <span class="n">pitch</span><span class="p">,</span> <span class="n">roll</span>
+</span><span id="L-42"><a href="#L-42"><span class="linenos">42</span></a>
+</span><span id="L-43"><a href="#L-43"><span class="linenos">43</span></a><span class="k">def</span> <span class="nf">calculate_velocity</span><span class="p">(</span><span class="n">last_pos</span><span class="p">,</span> <span class="n">current_pos</span><span class="p">,</span> <span class="n">time_diff</span><span class="o">=</span><span class="mf">0.03333333333</span><span class="p">):</span>
+</span><span id="L-44"><a href="#L-44"><span class="linenos">44</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;This function calculates the linear velocity in the x, y, and z directions for a given frame. It does this by taking the differnece in x, y, and z positions between frames and divides that by the time ellapsed over the frame (or 1/FramesPerSecond).</span>
+</span><span id="L-45"><a href="#L-45"><span class="linenos">45</span></a><span class="sd">    </span>
+</span><span id="L-46"><a href="#L-46"><span class="linenos">46</span></a><span class="sd">    :param lastPos: A tuple containin the position of the roller-coaster cart last frame.  </span>
+</span><span id="L-47"><a href="#L-47"><span class="linenos">47</span></a><span class="sd">    :param currentPos: A tuple containing the position of the roller-coaster cart this frame.  </span>
+</span><span id="L-48"><a href="#L-48"><span class="linenos">48</span></a><span class="sd">    :param timeDiff: The amount of time in seconds ellapsed over each frame. Dependent on frame rate data is being sent at.  </span>
+</span><span id="L-49"><a href="#L-49"><span class="linenos">49</span></a><span class="sd">    </span>
+</span><span id="L-50"><a href="#L-50"><span class="linenos">50</span></a><span class="sd">    :return: The linear velocity of the cart in the x, y, and z directions.</span>
+</span><span id="L-51"><a href="#L-51"><span class="linenos">51</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="L-52"><a href="#L-52"><span class="linenos">52</span></a>    <span class="n">pos1</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">last_pos</span><span class="p">)</span>
+</span><span id="L-53"><a href="#L-53"><span class="linenos">53</span></a>    <span class="n">pos2</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">current_pos</span><span class="p">)</span>
+</span><span id="L-54"><a href="#L-54"><span class="linenos">54</span></a>
+</span><span id="L-55"><a href="#L-55"><span class="linenos">55</span></a>    <span class="n">vx</span> <span class="o">=</span> <span class="p">(</span><span class="n">pos2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">pos1</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="n">time_diff</span>
+</span><span id="L-56"><a href="#L-56"><span class="linenos">56</span></a>    <span class="n">vy</span> <span class="o">=</span> <span class="p">(</span><span class="n">pos2</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">pos1</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="n">time_diff</span>
+</span><span id="L-57"><a href="#L-57"><span class="linenos">57</span></a>    <span class="n">vz</span> <span class="o">=</span> <span class="p">(</span><span class="n">pos2</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="n">pos1</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="o">/</span> <span class="n">time_diff</span>
+</span><span id="L-58"><a href="#L-58"><span class="linenos">58</span></a>    
+</span><span id="L-59"><a href="#L-59"><span class="linenos">59</span></a>    <span class="k">return</span> <span class="n">vx</span><span class="p">,</span> <span class="n">vy</span><span class="p">,</span> <span class="n">vz</span>
 </span></pre></div>
 
 
             </section>
+                <section id="last_pitch">
+                    <div class="attr variable">
+            <span class="name">last_pitch</span>        =
+<span class="default_value">0</span>
+
+        
+    </div>
+    <a class="headerlink" href="#last_pitch"></a>
+    
+    
+
+                </section>
+                <section id="safety_counter">
+                    <div class="attr variable">
+            <span class="name">safety_counter</span>        =
+<span class="default_value">0</span>
+
+        
+    </div>
+    <a class="headerlink" href="#safety_counter"></a>
+    
+    
+
+                </section>
+                <section id="safety_mode">
+                    <div class="attr variable">
+            <span class="name">safety_mode</span>        =
+<span class="default_value">False</span>
+
+        
+    </div>
+    <a class="headerlink" href="#safety_mode"></a>
+    
+    
+
+                </section>
                 <section id="quaternion_to_pitch_and_roll">
                             <input id="quaternion_to_pitch_and_roll-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
 <div class="attr function">
@@ -117,29 +181,45 @@ math_utils    </h1>
 
     </div>
     <a class="headerlink" href="#quaternion_to_pitch_and_roll"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="quaternion_to_pitch_and_roll-6"><a href="#quaternion_to_pitch_and_roll-6"><span class="linenos"> 6</span></a><span class="k">def</span> <span class="nf">quaternion_to_pitch_and_roll</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">w</span><span class="p">):</span>
-</span><span id="quaternion_to_pitch_and_roll-7"><a href="#quaternion_to_pitch_and_roll-7"><span class="linenos"> 7</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;This function converts quaternions from NoLimits2 representing the rotation of the roller-coaster cart in 3D space (x, y, z, and w) into pitch and roll angles in degrees. It does this with an external library called scipy.</span>
-</span><span id="quaternion_to_pitch_and_roll-8"><a href="#quaternion_to_pitch_and_roll-8"><span class="linenos"> 8</span></a><span class="sd">    </span>
-</span><span id="quaternion_to_pitch_and_roll-9"><a href="#quaternion_to_pitch_and_roll-9"><span class="linenos"> 9</span></a><span class="sd">    :param x: Rotation quaternion x.  </span>
-</span><span id="quaternion_to_pitch_and_roll-10"><a href="#quaternion_to_pitch_and_roll-10"><span class="linenos">10</span></a><span class="sd">    :param y: Rotation quaternion y.  </span>
-</span><span id="quaternion_to_pitch_and_roll-11"><a href="#quaternion_to_pitch_and_roll-11"><span class="linenos">11</span></a><span class="sd">    :param z: Rotation quaternion z. </span>
-</span><span id="quaternion_to_pitch_and_roll-12"><a href="#quaternion_to_pitch_and_roll-12"><span class="linenos">12</span></a><span class="sd">    :param w: Rotation quaternion w.  </span>
-</span><span id="quaternion_to_pitch_and_roll-13"><a href="#quaternion_to_pitch_and_roll-13"><span class="linenos">13</span></a><span class="sd">    </span>
-</span><span id="quaternion_to_pitch_and_roll-14"><a href="#quaternion_to_pitch_and_roll-14"><span class="linenos">14</span></a><span class="sd">    :return: The pitch and roll angles of the roller-coaster cart.</span>
-</span><span id="quaternion_to_pitch_and_roll-15"><a href="#quaternion_to_pitch_and_roll-15"><span class="linenos">15</span></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="quaternion_to_pitch_and_roll-16"><a href="#quaternion_to_pitch_and_roll-16"><span class="linenos">16</span></a>    <span class="n">quaternion</span> <span class="o">=</span> <span class="n">Rotation</span><span class="o">.</span><span class="n">from_quat</span><span class="p">([</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">w</span><span class="p">])</span>
-</span><span id="quaternion_to_pitch_and_roll-17"><a href="#quaternion_to_pitch_and_roll-17"><span class="linenos">17</span></a>    <span class="n">eulerAngles</span> <span class="o">=</span> <span class="n">quaternion</span><span class="o">.</span><span class="n">as_euler</span><span class="p">(</span><span class="s1">&#39;xzy&#39;</span><span class="p">,</span> <span class="n">degrees</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-</span><span id="quaternion_to_pitch_and_roll-18"><a href="#quaternion_to_pitch_and_roll-18"><span class="linenos">18</span></a>
-</span><span id="quaternion_to_pitch_and_roll-19"><a href="#quaternion_to_pitch_and_roll-19"><span class="linenos">19</span></a>    <span class="n">pitch</span><span class="p">,</span> <span class="n">roll</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">eulerAngles</span>
-</span><span id="quaternion_to_pitch_and_roll-20"><a href="#quaternion_to_pitch_and_roll-20"><span class="linenos">20</span></a>
-</span><span id="quaternion_to_pitch_and_roll-21"><a href="#quaternion_to_pitch_and_roll-21"><span class="linenos">21</span></a>    <span class="c1"># pitch = max(-15.5, min(pitch, 33.75))</span>
-</span><span id="quaternion_to_pitch_and_roll-22"><a href="#quaternion_to_pitch_and_roll-22"><span class="linenos">22</span></a>    <span class="c1"># roll = max(-40, min(roll, 40))</span>
-</span><span id="quaternion_to_pitch_and_roll-23"><a href="#quaternion_to_pitch_and_roll-23"><span class="linenos">23</span></a>
-</span><span id="quaternion_to_pitch_and_roll-24"><a href="#quaternion_to_pitch_and_roll-24"><span class="linenos">24</span></a>    <span class="k">return</span> <span class="n">pitch</span><span class="p">,</span> <span class="n">roll</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="quaternion_to_pitch_and_roll-10"><a href="#quaternion_to_pitch_and_roll-10"><span class="linenos">10</span></a><span class="k">def</span> <span class="nf">quaternion_to_pitch_and_roll</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">w</span><span class="p">):</span>
+</span><span id="quaternion_to_pitch_and_roll-11"><a href="#quaternion_to_pitch_and_roll-11"><span class="linenos">11</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;This function converts quaternions from NoLimits2 representing the rotation of the roller-coaster cart in 3D space (x, y, z, and w) into pitch and roll angles in degrees. It does this with an external library called scipy.</span>
+</span><span id="quaternion_to_pitch_and_roll-12"><a href="#quaternion_to_pitch_and_roll-12"><span class="linenos">12</span></a><span class="sd">       This function also attempts to fix an issue where the motion simulator would pitch too quickly and trigger a hardware interlock. When successive large single-frame deltas in pitch are observed, &quot;safety mode&quot; is activiated to reduce pitch of the ride</span>
+</span><span id="quaternion_to_pitch_and_roll-13"><a href="#quaternion_to_pitch_and_roll-13"><span class="linenos">13</span></a><span class="sd">       until the climb is completed.</span>
+</span><span id="quaternion_to_pitch_and_roll-14"><a href="#quaternion_to_pitch_and_roll-14"><span class="linenos">14</span></a><span class="sd">    </span>
+</span><span id="quaternion_to_pitch_and_roll-15"><a href="#quaternion_to_pitch_and_roll-15"><span class="linenos">15</span></a><span class="sd">    :param x: Rotation quaternion x.  </span>
+</span><span id="quaternion_to_pitch_and_roll-16"><a href="#quaternion_to_pitch_and_roll-16"><span class="linenos">16</span></a><span class="sd">    :param y: Rotation quaternion y.  </span>
+</span><span id="quaternion_to_pitch_and_roll-17"><a href="#quaternion_to_pitch_and_roll-17"><span class="linenos">17</span></a><span class="sd">    :param z: Rotation quaternion z. </span>
+</span><span id="quaternion_to_pitch_and_roll-18"><a href="#quaternion_to_pitch_and_roll-18"><span class="linenos">18</span></a><span class="sd">    :param w: Rotation quaternion w.  </span>
+</span><span id="quaternion_to_pitch_and_roll-19"><a href="#quaternion_to_pitch_and_roll-19"><span class="linenos">19</span></a><span class="sd">    </span>
+</span><span id="quaternion_to_pitch_and_roll-20"><a href="#quaternion_to_pitch_and_roll-20"><span class="linenos">20</span></a><span class="sd">    :return: The pitch and roll angles of the roller-coaster cart.</span>
+</span><span id="quaternion_to_pitch_and_roll-21"><a href="#quaternion_to_pitch_and_roll-21"><span class="linenos">21</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="quaternion_to_pitch_and_roll-22"><a href="#quaternion_to_pitch_and_roll-22"><span class="linenos">22</span></a>
+</span><span id="quaternion_to_pitch_and_roll-23"><a href="#quaternion_to_pitch_and_roll-23"><span class="linenos">23</span></a>    <span class="k">global</span> <span class="n">last_pitch</span><span class="p">,</span> <span class="n">safety_counter</span><span class="p">,</span> <span class="n">safety_mode</span>
+</span><span id="quaternion_to_pitch_and_roll-24"><a href="#quaternion_to_pitch_and_roll-24"><span class="linenos">24</span></a>    <span class="n">quaternion</span> <span class="o">=</span> <span class="n">Rotation</span><span class="o">.</span><span class="n">from_quat</span><span class="p">([</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">w</span><span class="p">])</span>
+</span><span id="quaternion_to_pitch_and_roll-25"><a href="#quaternion_to_pitch_and_roll-25"><span class="linenos">25</span></a>    <span class="n">euler_angles</span> <span class="o">=</span> <span class="n">quaternion</span><span class="o">.</span><span class="n">as_euler</span><span class="p">(</span><span class="s1">&#39;xzy&#39;</span><span class="p">,</span> <span class="n">degrees</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="quaternion_to_pitch_and_roll-26"><a href="#quaternion_to_pitch_and_roll-26"><span class="linenos">26</span></a>
+</span><span id="quaternion_to_pitch_and_roll-27"><a href="#quaternion_to_pitch_and_roll-27"><span class="linenos">27</span></a>    <span class="n">pitch</span><span class="p">,</span> <span class="n">roll</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">euler_angles</span>
+</span><span id="quaternion_to_pitch_and_roll-28"><a href="#quaternion_to_pitch_and_roll-28"><span class="linenos">28</span></a>    
+</span><span id="quaternion_to_pitch_and_roll-29"><a href="#quaternion_to_pitch_and_roll-29"><span class="linenos">29</span></a>    <span class="k">if</span> <span class="p">(</span><span class="n">pitch</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">pitch</span><span class="o">-</span><span class="n">last_pitch</span> <span class="o">&gt;=</span> <span class="mf">0.5</span><span class="p">):</span> <span class="c1"># Will have to be changed with testing. &quot;0.5&quot; should be replaced with the large single-frame delta seen in the test where an interlock occurred.</span>
+</span><span id="quaternion_to_pitch_and_roll-30"><a href="#quaternion_to_pitch_and_roll-30"><span class="linenos">30</span></a>        <span class="n">safety_counter</span> <span class="o">+=</span> <span class="mi">1</span>
+</span><span id="quaternion_to_pitch_and_roll-31"><a href="#quaternion_to_pitch_and_roll-31"><span class="linenos">31</span></a>    <span class="k">elif</span> <span class="p">(</span><span class="n">pitch</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">):</span>
+</span><span id="quaternion_to_pitch_and_roll-32"><a href="#quaternion_to_pitch_and_roll-32"><span class="linenos">32</span></a>        <span class="n">safety_mode</span> <span class="o">=</span> <span class="kc">False</span>
+</span><span id="quaternion_to_pitch_and_roll-33"><a href="#quaternion_to_pitch_and_roll-33"><span class="linenos">33</span></a>        <span class="n">safety_counter</span> <span class="o">=</span> <span class="mi">0</span>
+</span><span id="quaternion_to_pitch_and_roll-34"><a href="#quaternion_to_pitch_and_roll-34"><span class="linenos">34</span></a>    
+</span><span id="quaternion_to_pitch_and_roll-35"><a href="#quaternion_to_pitch_and_roll-35"><span class="linenos">35</span></a>    <span class="k">if</span> <span class="p">(</span><span class="n">safety_counter</span> <span class="o">&gt;=</span> <span class="mi">5</span><span class="p">):</span> <span class="c1"># Will also have to be changed in testing. Can modify the sensitivity of safety mode.</span>
+</span><span id="quaternion_to_pitch_and_roll-36"><a href="#quaternion_to_pitch_and_roll-36"><span class="linenos">36</span></a>        <span class="n">safety_mode</span> <span class="o">=</span> <span class="kc">True</span>
+</span><span id="quaternion_to_pitch_and_roll-37"><a href="#quaternion_to_pitch_and_roll-37"><span class="linenos">37</span></a>        
+</span><span id="quaternion_to_pitch_and_roll-38"><a href="#quaternion_to_pitch_and_roll-38"><span class="linenos">38</span></a>    <span class="k">if</span> <span class="p">(</span><span class="n">safety_mode</span> <span class="ow">and</span> <span class="n">pitch</span> <span class="o">&gt;</span> <span class="mf">29.4</span><span class="p">):</span> <span class="c1"># Final thing that may need tweaking. 29.4 is the maximum angle achievable by the hardware, but orchestrated motion may make this more complicated.</span>
+</span><span id="quaternion_to_pitch_and_roll-39"><a href="#quaternion_to_pitch_and_roll-39"><span class="linenos">39</span></a>        <span class="n">pitch</span> <span class="o">=</span> <span class="n">pitch</span> <span class="o">*</span> <span class="mf">0.9</span>
+</span><span id="quaternion_to_pitch_and_roll-40"><a href="#quaternion_to_pitch_and_roll-40"><span class="linenos">40</span></a>
+</span><span id="quaternion_to_pitch_and_roll-41"><a href="#quaternion_to_pitch_and_roll-41"><span class="linenos">41</span></a>    <span class="n">last_pitch</span> <span class="o">=</span> <span class="n">pitch</span>
+</span><span id="quaternion_to_pitch_and_roll-42"><a href="#quaternion_to_pitch_and_roll-42"><span class="linenos">42</span></a>    <span class="k">return</span> <span class="n">pitch</span><span class="p">,</span> <span class="n">roll</span>
 </span></pre></div>
 
 
-            <div class="docstring"><p>This function converts quaternions from NoLimits2 representing the rotation of the roller-coaster cart in 3D space (x, y, z, and w) into pitch and roll angles in degrees. It does this with an external library called scipy.</p>
+            <div class="docstring"><p>This function converts quaternions from NoLimits2 representing the rotation of the roller-coaster cart in 3D space (x, y, z, and w) into pitch and roll angles in degrees. It does this with an external library called scipy.
+   This function also attempts to fix an issue where the motion simulator would pitch too quickly and trigger a hardware interlock. When successive large single-frame deltas in pitch are observed, "safety mode" is activiated to reduce pitch of the ride
+   until the climb is completed.</p>
 
 <h6 id="parameters">Parameters</h6>
 
@@ -164,29 +244,29 @@ math_utils    </h1>
 <div class="attr function">
             
         <span class="def">def</span>
-        <span class="name">calculate_velocity</span><span class="signature pdoc-code condensed">(<span class="param"><span class="n">lastPos</span>, </span><span class="param"><span class="n">currentPos</span>, </span><span class="param"><span class="n">timeDiff</span><span class="o">=</span><span class="mf">0.03333333333</span></span><span class="return-annotation">):</span></span>
+        <span class="name">calculate_velocity</span><span class="signature pdoc-code condensed">(<span class="param"><span class="n">last_pos</span>, </span><span class="param"><span class="n">current_pos</span>, </span><span class="param"><span class="n">time_diff</span><span class="o">=</span><span class="mf">0.03333333333</span></span><span class="return-annotation">):</span></span>
 
                 <label class="view-source-button" for="calculate_velocity-view-source"><span>View Source</span></label>
 
     </div>
     <a class="headerlink" href="#calculate_velocity"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="calculate_velocity-26"><a href="#calculate_velocity-26"><span class="linenos">26</span></a><span class="k">def</span> <span class="nf">calculate_velocity</span><span class="p">(</span><span class="n">lastPos</span><span class="p">,</span> <span class="n">currentPos</span><span class="p">,</span> <span class="n">timeDiff</span><span class="o">=</span><span class="mf">0.03333333333</span><span class="p">):</span>
-</span><span id="calculate_velocity-27"><a href="#calculate_velocity-27"><span class="linenos">27</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;This function calculates the linear velocity in the x, y, and z directions for a given frame. It does this by taking the differnece in x, y, and z positions between frames and divides that by the time ellapsed over the frame (or 1/FramesPerSecond).</span>
-</span><span id="calculate_velocity-28"><a href="#calculate_velocity-28"><span class="linenos">28</span></a><span class="sd">    </span>
-</span><span id="calculate_velocity-29"><a href="#calculate_velocity-29"><span class="linenos">29</span></a><span class="sd">    :param lastPos: A tuple containin the position of the roller-coaster cart last frame.  </span>
-</span><span id="calculate_velocity-30"><a href="#calculate_velocity-30"><span class="linenos">30</span></a><span class="sd">    :param currentPos: A tuple containing the position of the roller-coaster cart this frame.  </span>
-</span><span id="calculate_velocity-31"><a href="#calculate_velocity-31"><span class="linenos">31</span></a><span class="sd">    :param timeDiff: The amount of time in seconds ellapsed over each frame. Dependent on frame rate data is being sent at.  </span>
-</span><span id="calculate_velocity-32"><a href="#calculate_velocity-32"><span class="linenos">32</span></a><span class="sd">    </span>
-</span><span id="calculate_velocity-33"><a href="#calculate_velocity-33"><span class="linenos">33</span></a><span class="sd">    :return: The linear velocity of the cart in the x, y, and z directions.</span>
-</span><span id="calculate_velocity-34"><a href="#calculate_velocity-34"><span class="linenos">34</span></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="calculate_velocity-35"><a href="#calculate_velocity-35"><span class="linenos">35</span></a>    <span class="n">pos1</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">lastPos</span><span class="p">)</span>
-</span><span id="calculate_velocity-36"><a href="#calculate_velocity-36"><span class="linenos">36</span></a>    <span class="n">pos2</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">currentPos</span><span class="p">)</span>
-</span><span id="calculate_velocity-37"><a href="#calculate_velocity-37"><span class="linenos">37</span></a>
-</span><span id="calculate_velocity-38"><a href="#calculate_velocity-38"><span class="linenos">38</span></a>    <span class="n">vx</span> <span class="o">=</span> <span class="p">(</span><span class="n">pos2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">pos1</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="n">timeDiff</span>
-</span><span id="calculate_velocity-39"><a href="#calculate_velocity-39"><span class="linenos">39</span></a>    <span class="n">vy</span> <span class="o">=</span> <span class="p">(</span><span class="n">pos2</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">pos1</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="n">timeDiff</span>
-</span><span id="calculate_velocity-40"><a href="#calculate_velocity-40"><span class="linenos">40</span></a>    <span class="n">vz</span> <span class="o">=</span> <span class="p">(</span><span class="n">pos2</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="n">pos1</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="o">/</span> <span class="n">timeDiff</span>
-</span><span id="calculate_velocity-41"><a href="#calculate_velocity-41"><span class="linenos">41</span></a>
-</span><span id="calculate_velocity-42"><a href="#calculate_velocity-42"><span class="linenos">42</span></a>    <span class="k">return</span> <span class="n">vx</span><span class="p">,</span> <span class="n">vy</span><span class="p">,</span> <span class="n">vz</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="calculate_velocity-44"><a href="#calculate_velocity-44"><span class="linenos">44</span></a><span class="k">def</span> <span class="nf">calculate_velocity</span><span class="p">(</span><span class="n">last_pos</span><span class="p">,</span> <span class="n">current_pos</span><span class="p">,</span> <span class="n">time_diff</span><span class="o">=</span><span class="mf">0.03333333333</span><span class="p">):</span>
+</span><span id="calculate_velocity-45"><a href="#calculate_velocity-45"><span class="linenos">45</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;This function calculates the linear velocity in the x, y, and z directions for a given frame. It does this by taking the differnece in x, y, and z positions between frames and divides that by the time ellapsed over the frame (or 1/FramesPerSecond).</span>
+</span><span id="calculate_velocity-46"><a href="#calculate_velocity-46"><span class="linenos">46</span></a><span class="sd">    </span>
+</span><span id="calculate_velocity-47"><a href="#calculate_velocity-47"><span class="linenos">47</span></a><span class="sd">    :param lastPos: A tuple containin the position of the roller-coaster cart last frame.  </span>
+</span><span id="calculate_velocity-48"><a href="#calculate_velocity-48"><span class="linenos">48</span></a><span class="sd">    :param currentPos: A tuple containing the position of the roller-coaster cart this frame.  </span>
+</span><span id="calculate_velocity-49"><a href="#calculate_velocity-49"><span class="linenos">49</span></a><span class="sd">    :param timeDiff: The amount of time in seconds ellapsed over each frame. Dependent on frame rate data is being sent at.  </span>
+</span><span id="calculate_velocity-50"><a href="#calculate_velocity-50"><span class="linenos">50</span></a><span class="sd">    </span>
+</span><span id="calculate_velocity-51"><a href="#calculate_velocity-51"><span class="linenos">51</span></a><span class="sd">    :return: The linear velocity of the cart in the x, y, and z directions.</span>
+</span><span id="calculate_velocity-52"><a href="#calculate_velocity-52"><span class="linenos">52</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="calculate_velocity-53"><a href="#calculate_velocity-53"><span class="linenos">53</span></a>    <span class="n">pos1</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">last_pos</span><span class="p">)</span>
+</span><span id="calculate_velocity-54"><a href="#calculate_velocity-54"><span class="linenos">54</span></a>    <span class="n">pos2</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">current_pos</span><span class="p">)</span>
+</span><span id="calculate_velocity-55"><a href="#calculate_velocity-55"><span class="linenos">55</span></a>
+</span><span id="calculate_velocity-56"><a href="#calculate_velocity-56"><span class="linenos">56</span></a>    <span class="n">vx</span> <span class="o">=</span> <span class="p">(</span><span class="n">pos2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">pos1</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="n">time_diff</span>
+</span><span id="calculate_velocity-57"><a href="#calculate_velocity-57"><span class="linenos">57</span></a>    <span class="n">vy</span> <span class="o">=</span> <span class="p">(</span><span class="n">pos2</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">pos1</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="n">time_diff</span>
+</span><span id="calculate_velocity-58"><a href="#calculate_velocity-58"><span class="linenos">58</span></a>    <span class="n">vz</span> <span class="o">=</span> <span class="p">(</span><span class="n">pos2</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="n">pos1</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="o">/</span> <span class="n">time_diff</span>
+</span><span id="calculate_velocity-59"><a href="#calculate_velocity-59"><span class="linenos">59</span></a>    
+</span><span id="calculate_velocity-60"><a href="#calculate_velocity-60"><span class="linenos">60</span></a>    <span class="k">return</span> <span class="n">vx</span><span class="p">,</span> <span class="n">vy</span><span class="p">,</span> <span class="n">vz</span>
 </span></pre></div>
 
 
