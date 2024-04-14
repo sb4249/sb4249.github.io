@@ -2,6 +2,7 @@
 
 import os
 import datetime
+from datetime import datetime
 from nl2telemetry.message.reply import TelemetryData
 from packet import Packet
 
@@ -31,7 +32,10 @@ def log_nl2(nl2_data: TelemetryData) -> None:
     
     :return: None.
     """
-    data = ""
+    
+    now = datetime.now()
+    
+    data = "Current Time: " + now + "\n"
     data += "position x: " + str(nl2_data.position_x) + "\n"
     data += "position y: " + str(nl2_data.position_y) + "\n"
     data += "position z: " + str(nl2_data.position_z) + "\n"
@@ -50,7 +54,10 @@ def log_packet(packetData: Packet) -> None:
     
     :return: None.
     """
-    data = ""
+        
+    now = datetime.now()
+    
+    data = "Current Time: " + now + "\n"
     data += "x_lin_vel: " + str(packetData.x_lin_vel) + "\n"
     data += "y_lin_vel: " + str(packetData.y_lin_vel) + "\n"
     data += "z_lin_vel: " + str(packetData.z_lin_vel) + "\n"
