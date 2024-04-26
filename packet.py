@@ -38,7 +38,7 @@ class Packet:
 
     def format_packet(self) -> struct.pack:
         """This function formats the packet that will be sent to the motion computer.
-        
+
         :return: A correctly constructed packet that can be sent to the motion computer.
         """
         return struct.pack('8s8slidddddddd8s',
@@ -58,7 +58,7 @@ class Packet:
 
     def time_tick(self) -> None:
         """This function incriments a variable that allows the application to track which frame is currently being processed.
-        
+
         :return: None.
         """
         self.tick += 1

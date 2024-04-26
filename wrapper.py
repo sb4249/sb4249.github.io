@@ -3,19 +3,31 @@
 import signal
 import sys
 import time
+import threading
 from packet import Packet
 from client import Client
 from nl2fetch import NL2Fetch
 from globals import *
 
+lock = threading.Lock() #lock for the kill_signal variable
+
+""" Listening thread of execution """
+def listener():
+    global kill_signal
+    while True:
+        # If main thread received the kill signal, terminate this thread too
+        with lock:
+            if kill_signal:
+                return
+
+        # Receive data at the same framerate as the main thread
+        client.rec_data()
+        time.sleep(1.0/float(FRAME_RATE))
+
 if __name__ == "__main__":
 
-    # Handle graceful termination
-    def signal_handler(sig, frame):
-        print("exiting")
-        sys.exit(0)
-
-    signal.signal(signal.SIGINT, signal_handler)
+    global kill_signal
+    kill_signal = False
 
     # Initialize client socket
     client = Client(MOTION_COMPUTER_IP, MOTION_COMPUTER_PORT)
@@ -23,9 +35,25 @@ if __name__ == "__main__":
     # Initialize NL2 connection
     nl2 = NL2Fetch(NL2_IP, NL2_PORT)
 
+    # Start listening thread of execution for message commands from MC
+    listener_thread = threading.Thread(target=listener)
+    listener_thread.start()
+
+    # Handle graceful termination
+    def signal_handler(sig, frame):
+        global kill_signal
+        # pass kill signal along to listening thread and wait for termination
+        with lock:
+            print("Exiting")
+            kill_signal = True
+        listener_thread.join()
+        sys.exit(0)
+
+    signal.signal(signal.SIGINT, signal_handler)
+
+    # main data sending loop
     packet = Packet()
     while True:
-
         nl2.nl2_get_telemetry(packet)
         client.send_data(packet.format_packet())
         packet.time_tick()

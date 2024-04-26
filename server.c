@@ -5,14 +5,17 @@
 #include <arpa/inet.h>
 #include <signal.h>
 
+// When testing locally, since you only have one ip, you need two ports
 #define SERVER_PORT 4001
+#define CLIENT_PORT 4002
 #define SERVER_IP "127.0.0.1"
 
 int listening = 1; //used in termination signal handler
+int server_socket = 0;
 
 struct Packet {
-    double header; //wrong variable type but we dont need to read here
-    double fsTimer; //wrong variable type but we dont need to read here
+    double header; //header is not a double, but has the same amount of bytes
+    double fsTimer; //^
     int32_t tick;
     int32_t tmp;
     double x_lin_vel;
@@ -23,55 +26,32 @@ struct Packet {
     double pitch_pos;
     double roll_pos;
     double altitude;
-    double garbage; //wrong variable type but we dont need to read here
+    double garbage; //padding
 };
 
-uint32_t
-flip_32_bit_int(uint32_t input)
-{
-    size_t byte_count = sizeof(input);
-    int mask = 0xFF;
-    int rs = 0;
-    int ls = (byte_count-1)*8;
-    uint32_t result = 0;
+struct CommandMsg {
+    char header[8]; //header is technically a packet structure in reality, but this was easier
+    unsigned char ride_command;
+    unsigned char spare[3]; //padding
+};
 
-    for (int i = 0; i < byte_count; i++)
-    {
-        int cur_byte = (input & mask) >> rs;
-        result |= cur_byte << ls;
+// List of commands that can be sent as a command message
+enum COMMANDS {
+    NO_COMMAND,
+    START_LOAD_LANGUAGE_1_COMMAND,
+    DOOR_OPENED_COMMAND,
+    DOOR_CLOSED_COMMAND,
+    GAME_START_COMMAND,
+    STOP_END_OF_GAME_COMMAND,
+    STOP_AUTO_COMMAND,
+    STOP_MANUAL_COMMAND,
+    START_LOAD_LANGUAGE_2_COMMAND,
+    START_LOAD_LANGUAGE_3_COMMAND,
+    START_LOAD_DEMO_COMMAND,
+    NUMBER_OF_GAME_COMMAND
+};
 
-        mask <<= 8;
-        rs += 8;
-        ls -= 8;
-    }
-
-    return result;
-}
-
-uint64_t
-load_u64be(const unsigned char *buf)
-{
-    uint64_t result = 0;
-    for (int i = 0; i < sizeof(buf); i++)
-    {
-        result |= ((uint64_t)buf[i] << (sizeof(buf)*(8-i-1)));
-    }
-
-    return result;
-}
-
-double
-flip_double(double input)
-{
-    unsigned char byte_pointer[sizeof(double)];
-    memcpy(&byte_pointer, &(input), sizeof(double));
-
-    uint64_t flipped_raw = load_u64be(byte_pointer);
-    double result;
-    memcpy(&result, &flipped_raw, sizeof(double));
-    return result;
-}
-
+// Interrupt handler so you can close the program and socket any time
 void
 handle_signal(int signo)
 {
@@ -79,7 +59,7 @@ handle_signal(int signo)
     {
         printf("\nexiting\n");
         listening = 0;
-        // TODO: close socket? Maybe making the socket a global?
+        close(server_socket);
         exit(1);
     }
 }
@@ -87,7 +67,6 @@ handle_signal(int signo)
 int
 main()
 {
-    int server_socket, client_socket;
     struct sockaddr_in server_address, client_address;
     socklen_t client_address_len = sizeof(client_address);
 
@@ -113,6 +92,12 @@ main()
         return 1;
     }
 
+    // Set up a port for sending the command message
+    socklen_t len = sizeof(client_address);
+    client_address.sin_family = AF_INET;
+    client_address.sin_port = htons(CLIENT_PORT);
+    client_address.sin_addr.s_addr = inet_addr(SERVER_IP);
+
     if (signal(SIGINT, handle_signal) == SIG_ERR)
     {
         perror("Error setting up signal handler");
@@ -120,10 +105,26 @@ main()
         return 1;
     }
 
-    printf("Listening...\n");
+    printf("Test server sending and recieving...\n");
 
+    int counter = 1;
     while (listening)
     {
+
+        // Send data (less frequently than receive data to simulate occasional message commands)
+        if (counter % 10 == 0)
+        {
+
+            // 0x05 is for MC_TO_SC_HEARTBEAT, 0x0C is size of message, which is 12 bytes
+            // The command being sent is arbitrary and you can choose anything in the COMMANDS enum
+            struct CommandMsg command_msg = {{0x00, 0x05, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00}, DOOR_OPENED_COMMAND, {0x00, 0x00, 0x00}};
+
+            sendto(server_socket, &command_msg, sizeof(command_msg), 0, (const struct sockaddr *)&client_address, len);
+            counter = 1;
+        }
+        counter++;
+
+
         struct Packet packet;
 
         // Recieve data
@@ -136,21 +137,20 @@ main()
         }
 
         printf("%d %d %0.2f %0.2f %0.2f %0.2f %0.2f %0.2f %0.2f %0.2f\n",
-                flip_32_bit_int(packet.tick),
-                flip_32_bit_int(packet.tmp),
-                flip_double(packet.x_lin_vel),
-                flip_double(packet.y_lin_vel),
-                flip_double(packet.z_lin_vel),
-                flip_double(packet.pitch_ang_vel),
-                flip_double(packet.roll_ang_vel),
-                flip_double(packet.pitch_pos),
-                flip_double(packet.roll_pos),
-                flip_double(packet.altitude));
+                packet.tick,
+                packet.tmp,
+                packet.x_lin_vel,
+                packet.y_lin_vel,
+                packet.z_lin_vel,
+                packet.pitch_ang_vel,
+                packet.roll_ang_vel,
+                packet.pitch_pos,
+                packet.roll_pos,
+                packet.altitude);
     }
 
     close(server_socket);
 
     return 0;
 }
-
 

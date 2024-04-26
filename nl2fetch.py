@@ -28,9 +28,9 @@ class NL2Fetch:
 
     def nl2_get_telemetry(self, packet: Packet) -> None:
         """This function recieves values from NoLimits2 including linear velocity in the x, y, and z directions and the rotation quaternions for the roller-coaster cart in 3D space. This data will later be manipulated to convert it into a form usable by the motion copmputer. The packet object is updated with the new values.
-        
-        :param packet: An instance of the packet class. Will be populated with data to send to the motion computer. 
-        
+
+        :param packet: An instance of the packet class. Will be populated with data to send to the motion computer.
+
         :return: None
         """
         self.nl2.send(get_telemetry)
@@ -87,3 +87,4 @@ class NL2Fetch:
         """Closes the connection to NoLimits2 when the application is terminated."""
         print("closing nl2 connection")
         self.nl2.close()
+
