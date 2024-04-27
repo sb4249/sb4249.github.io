@@ -17,7 +17,6 @@ def write(data: str, fileName: str) -> None:
     """
 
     #get file path
-    fileName += str(datetime.datetime.now())
     file = os.path.join("data", fileName)
 
     #writes it to the proper file, appending if already exists
