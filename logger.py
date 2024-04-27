@@ -6,6 +6,7 @@ from datetime import datetime
 from nl2telemetry.message.reply import TelemetryData
 from packet import Packet
 
+frameNum = 0
 
 def write(data: str, fileName: str) -> None:
     """This function is the on actually writing data to a log file. It will find the file and write the provided data to it if it is emtpy and append the data if it already contains some.
@@ -31,10 +32,12 @@ def log_nl2(nl2_data: TelemetryData) -> None:
     
     :return: None.
     """
+    frameNum = frameNum + 1
     
     now = datetime.now()
     
     data = "Current Time: " + now + "\n"
+    data += "Frame number: " + frameNum + "\n"
     data += "position x: " + str(nl2_data.position_x) + "\n"
     data += "position y: " + str(nl2_data.position_y) + "\n"
     data += "position z: " + str(nl2_data.position_z) + "\n"
@@ -57,6 +60,7 @@ def log_packet(packetData: Packet) -> None:
     now = datetime.now()
     
     data = "Current Time: " + now + "\n"
+    data += "Frame number: " + frameNum + "\n"
     data += "x_lin_vel: " + str(packetData.x_lin_vel) + "\n"
     data += "y_lin_vel: " + str(packetData.y_lin_vel) + "\n"
     data += "z_lin_vel: " + str(packetData.z_lin_vel) + "\n"
