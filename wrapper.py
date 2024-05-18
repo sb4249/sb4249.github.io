@@ -22,7 +22,6 @@ def listener():
 
         # Receive data at the same framerate as the main thread
         client.rec_data()
-        time.sleep(1.0/float(FRAME_RATE))
 
 if __name__ == "__main__":
 
@@ -33,7 +32,21 @@ if __name__ == "__main__":
     client = Client(MOTION_COMPUTER_IP, MOTION_COMPUTER_PORT)
 
     # Initialize NL2 connection
-    nl2 = NL2Fetch(NL2_IP, NL2_PORT)
+    print("Connecting to NL2...")
+    counter = 0
+    nl2 = None
+    while True:
+        try:
+            nl2 = NL2Fetch(NL2_IP, NL2_PORT)
+            break
+        except ConnectionRefusedError as e:
+            counter += 1
+            if counter >= 10:
+                print("Failed to connect to NL2")
+                exit(1)
+            time.sleep(1.0)
+
+    print("NL2 Connection Established")
 
     # Start listening thread of execution for message commands from MC
     listener_thread = threading.Thread(target=listener)

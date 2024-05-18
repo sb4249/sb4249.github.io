@@ -16,7 +16,6 @@ class NL2Fetch:
     def __init__(self, ip: str, port: int):
         """Initializes objects needed for network connection to NoLimits2."""
         # Initialize NL2 connection here
-        print("starting nl2 connection")
         self.nl2: nl2telemetry.transmitter.TcpTransmitter = NoLimits2(ip, port)
         """Initializes an object that will allow the application to communicate with NoLimits2. This uses the nl2telemetry package to facilitate communication."""
         self.nl2.connect()
@@ -24,7 +23,6 @@ class NL2Fetch:
         """Initializes a variable to track the last position of the roller-coaster cart. This will be used to calculate linear velocity over each frame of the simulation. Each value in the tuple represents the x, y, and z position of the roller-coaster cart."""
         self.play_mode = False
         """Initializes a variable to track the if the game is still running. This is used to determine if the game was running but has exited."""
-
 
     def nl2_get_telemetry(self, packet: Packet) -> None:
         """This function recieves values from NoLimits2 including linear velocity in the x, y, and z directions and the rotation quaternions for the roller-coaster cart in 3D space. This data will later be manipulated to convert it into a form usable by the motion copmputer. The packet object is updated with the new values.
@@ -85,6 +83,5 @@ class NL2Fetch:
 
     def __del__(self) -> None:
         """Closes the connection to NoLimits2 when the application is terminated."""
-        print("closing nl2 connection")
         self.nl2.close()
 
