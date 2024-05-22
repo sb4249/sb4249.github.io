@@ -20,7 +20,7 @@ def listener():
             if kill_signal:
                 return
 
-        # Receive data at the same framerate as the main thread
+        # Receive data (should not be framerate synced)
         client.rec_data()
 
 if __name__ == "__main__":
@@ -31,7 +31,7 @@ if __name__ == "__main__":
     # Initialize client socket
     client = Client(MOTION_COMPUTER_IP, MOTION_COMPUTER_PORT)
 
-    # Initialize NL2 connection
+    # Initialize NL2 connection (try 10 times before timing out)
     print("Connecting to NL2...")
     counter = 0
     nl2 = None
