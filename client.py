@@ -2,6 +2,7 @@
 
 import socket
 import struct
+from globals import SHOW_COMPUTER_IP
 
 saved_num = 1
 class Client:
@@ -17,7 +18,7 @@ class Client:
         """The client socket for sending and receiving"""
         # Bind the socket
         print(ip)
-        self.client_socket.bind(('10.10.101.91', 4001)) #4002 when testing locally
+        self.client_socket.bind((SHOW_COMPUTER_IP, 4001)) #4002 when testing locally
         # Set timeout so that the listening thread can react to a program termination"""
         self.client_socket.settimeout(1) #one second (could maybe be less, but I don't see this becoming an issue)
 
