@@ -10,6 +10,8 @@ MOTION_COMPUTER_IP = os.getenv('MOTION_COMPUTER_IP', '127.0.0.1')
 """The IP of the motion computer. This is where packets will be sent once they are formatted and generated."""
 MOTION_COMPUTER_PORT = 4001
 """The port that communication with the motion computer is done on."""
+SHOW_COMPUTER_IP = "10.10.101.91"
+"""The IP of the show computer."""
 NL2_IP = '127.0.0.1'
 """The IP that motion information is being recieved from. Should be localhost IP since NoLimits2 will be running on the show computer."""
 NL2_PORT = 15151

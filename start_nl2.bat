@@ -1,8 +1,6 @@
+@echo off
 echo Starting No Limits 2...
-start "" "C:\path\to\NoLimits2\NoLimits2.exe"
-
-timeout /t 10
+start "" "C:\Program Files (x86)\Steam\steamapps\common\NoLimits 2\64bit\nolimits2stm.exe"
 
 echo Starting Python script...
-python "C:\path\to\your\script.py"
-echo Done.
+python "C:\Users\Drexel\Desktop\sb4249.github.io-2way\wrapper.py"
